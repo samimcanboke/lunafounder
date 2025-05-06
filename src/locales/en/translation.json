@@ -1,0 +1,237 @@
+{
+  "header": {
+    "language": {
+      "en": "EN",
+      "de": "DE"
+    },
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "ticketCard": {
+      "soldToday": "Ticket Solds Today",
+      "pcs": "pcs",
+      "prize": "Prize",
+      "viewDetail": "View detail"
+    },
+    "salesRevenueCard": {
+      "title": "Sales Revenue",
+      "tab": {
+        "monthly": "Monthly",
+        "weekly": "Weekly",
+        "daily": "Daily"
+      }
+    },
+    "carouselSection": {
+      "founderCollections": "LUNA FOUNDER COLLECTIONS",
+      "latestSales": "Latest Sales"
+    },
+    "mint": "Mint",
+    "tiersTitle": "🎉 Luna Founder NFT Tiers 🎉",
+    "videoUnsupported": "Your browser does not support the video tag.",
+    "summaryCards": {
+      "firstline": "Firstline",
+      "team": "Team",
+      "count": "Count",
+      "earnings": "Earnings"
+    }
+  },
+  "referrals": {
+    "none": "None",
+    "wallet": "My Wallet",
+    "shareReferralLink": "Share the referral link",
+    "inviteFriends": "Invite your Friends",
+    "networkTitle": "Your Referral Network",
+    "positionBonus": "Your Streamline position is {{position}} | Bonus: {{bonus}}",
+    "expandAll": "Expand All",
+    "collapseAll": "Collapse All",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "levels": {
+      "depth": "Depth",
+      "peopleActive": "People/Active"
+    }
+  },
+  "profilePage": {
+    "profilePictureAlt": "{{name}}",
+    "walletBalance": "Your Wallet Balance",
+    "firstLineEarnings": "First Line Earnings",
+    "teamEarnings": "Team Earnings",
+    "creditCardForm": "Credit Card Form",
+    "mintNewNfts": "Mint New NFTs",
+    "yourReferrals": "Your Referrals",
+    "directReferrals": "{{count}} direct referrals",
+    "table": {
+      "date": "Date",
+      "walletAddress": "Wallet Address",
+      "status": "Status"
+    },
+    "noReferrals": "No referrals found",
+    "statusActive": "Active",
+    "pcs": "Pcs"
+  },
+  "settings": {
+    "profileCard": {
+      "userAlt": "User",
+      "errorLoading": "Error loading profile:",
+      "name": "Name",
+      "mobile": "Mobile",
+      "mail": "Mail",
+      "location": "Location",
+      "notSet": "Not set"
+    },
+    "changePassword": {
+      "title": "Change Password",
+      "currentPassword": "CURRENT PASSWORD",
+      "newPassword": "NEW PASSWORD",
+      "repeatNewPassword": "REPEAT NEW PASSWORD",
+      "placeholderCurrent": "Enter Current Password",
+      "placeholderNew": "Enter New Password",
+      "placeholderRepeat": "Repeat New Password",
+      "passwordsNotMatch": "Passwords do not match",
+      "forgotPassword": "Forgot Password?",
+      "submit": "Change Password"
+    },
+    "editProfile": {
+      "title": "Edit Profile",
+      "firstName": "FIRST NAME",
+      "placeholderFirstName": "Your First Name",
+      "lastName": "LAST NAME",
+      "placeholderLastName": "Your Last Name",
+      "phoneNumber": "PHONE NUMBER",
+      "placeholderPhoneNumber": "Your Phone Number",
+      "emailAddress": "EMAIL ADDRESS",
+      "placeholderEmailAddress": "Your Email Address",
+      "country": "COUNTRY",
+      "selectCountry": "Select Your Country",
+      "countryOptions": { "us": "United States", "de": "Germany", "other": "Other" },
+      "postalCode": "POSTAL CODE",
+      "selectPostalCode": "Select Your Postal Code",
+      "postalCodeOptions": { "code1": "12345", "code2": "67890" },
+      "city": "CITY",
+      "selectCity": "Select Your City",
+      "cityOptions": { "california": "California", "berlin": "Berlin" },
+      "productName": "PRODUCT NAME",
+      "placeholderProductName": "comvi-dashboard.com",
+      "aboutMe": "ABOUT ME",
+      "placeholderAboutMe": "Tell us about yourself...",
+      "submit": "Update Profile"
+    },
+    "loginHistory": {
+      "title": "Login History",
+      "logoutAll": "All Logout",
+      "logout": "Logout"
+    }
+  },
+  "referralRules": {
+    "title": "Level Affiliate System",
+    "description": "Our affiliate system allows partners to earn commissions for selling LunaFounder NFTs. The revenue is distributed across 10 levels, based on the price of the purchased NFT.",
+    "table": {
+      "level": "Level",
+      "date": "Date",
+      "commission": "Commission"
+    },
+    "rulesTitle": "Rules",
+    "rules": [
+      "Team sales are calculated based on NFT purchases across the entire structure.",
+      "Direct sub-structure affiliates hold the highest rank priority.",
+      "A maximum of 25% of sales from a single structure counts towards team sales.",
+      "Affiliate must have at least one direct referral to receive rank bonuses.",
+      "All transactions and payouts are transparent and publicly visible on the blockchain."
+    ],
+    "importantTitle": "Important Info",
+    "importantInfo": [
+      "Automatic calculation and payout of commissions.",
+      "Real-time or regularly updated team sales",
+      "Rank bonus distribution (can be manually triggered or automatic)",
+      "All transactions and payouts are transparent and publicly visible on the blockchain."
+    ]
+  },
+  "badges": {
+    "ranksTitle": "Ranks",
+    "noBadge": "No Badge",
+    "totalScore": "Total score {{score}} USD.",
+    "confidenceCannotBeEvaluated": "Confidence cannot be evaluated",
+    "searchPlaceholder": "Search name, phone, etc...",
+    "table": {
+      "name": "Name",
+      "wallet": "Wallet",
+      "sales": "Sales"
+    },
+    "modal": {
+      "levelInfo": "Level Info",
+      "close": "Close"
+    }
+  },
+  "tickets": {
+    "lotteryTickets": "Lottery Tickets",
+    "activeTicketsTitle": "Active Tickets",
+    "activeTicketLabel": "Active Ticket",
+    "nextDraw": "{{date}} GMT: {{time}}",
+    "status": {
+      "inStock": "In Stock",
+      "cancelled": "Cancelled"
+    }
+  },
+  "wallet": {
+    "button": {
+      "changeWallet": "Change wallet",
+      "connecting": "Connecting ...",
+      "copyAddress": "Copy address",
+      "copied": "Copied",
+      "disconnect": "Disconnect",
+      "connect": "Connect",
+      "selectWallet": "Select Wallet"
+    }
+  },
+  "adminReward": {
+    "selectUser": {
+      "title": "Select User",
+      "description": "Randomly select a user to receive the reward.",
+      "randomize": "Randomize User",
+      "username": "Username",
+      "usernamePlaceholder": "Username",
+      "userId": "User ID",
+      "userIdPlaceholder": "User ID",
+      "tickets": "User's Tickets",
+      "ticketsPlaceholder": "Tickets",
+      "giveReward": "Give Reward"
+    },
+    "selectReward": {
+      "title": "Select Reward",
+      "deleteButton": "Delete"
+    },
+    "createReward": {
+      "title": "Create New Reward",
+      "description": "Add a new reward to the list.",
+      "name": "Reward Name",
+      "namePlaceholder": "Enter reward name",
+      "emoji": "Emoji",
+      "emojiPlaceholder": "Enter emoji",
+      "amount": "Amount",
+      "amountPlaceholder": "Enter amount",
+      "imageUrl": "Image Link",
+      "imageUrlPlaceholder": "Enter image URL",
+      "createButton": "Create Reward"
+    }
+  },
+  "adminOverview": {
+    "header": {
+      "title": "Admin Overview",
+      "tooltip": "Click on any row to view more details",
+      "clickRows": "Click rows for details"
+    },
+    "table": {
+      "id": "ID",
+      "name": "Name",
+      "level": "Level",
+      "date": "Date",
+      "commission": "Commission",
+      "actions": "Actions",
+      "joinDate": "Join Date:",
+      "nfts": "NFTs:",
+      "lastOrder": "Last Order:",
+      "totalSpend": "Total Spend:"
+    }
+  }
+}
