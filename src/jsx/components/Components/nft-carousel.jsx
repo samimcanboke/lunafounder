@@ -12,6 +12,9 @@ export default function NFTCarousel({
   const [activeIndex, setActiveIndex] = useState(0);
   const navigate = useNavigate();
 
+  // Limit images to the last three
+  const limitedImages = images.slice(-3);
+
   const goToSlide = (index) => {
     setActiveIndex(index);
   };
@@ -23,12 +26,12 @@ export default function NFTCarousel({
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) =>
-        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        prevIndex === limitedImages.length - 1 ? 0 : prevIndex + 1
       );
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [limitedImages.length]);
 
   const containerStyle = {
     width: "100%",
@@ -46,14 +49,14 @@ export default function NFTCarousel({
   return (
     <div style={containerStyle} className={className || ""}>
       <div style={carouselContainerStyle}>
-        {images.map((image, index) => {
+        {limitedImages.map((image, index) => {
           const isActive = index === activeIndex;
           const isPrev =
             index === activeIndex - 1 ||
-            (activeIndex === 0 && index === images.length - 1);
+            (activeIndex === 0 && index === limitedImages.length - 1);
           const isNext =
             index === activeIndex + 1 ||
-            (activeIndex === images.length - 1 && index === 0);
+            (activeIndex === limitedImages.length - 1 && index === 0);
 
           if (!isActive && !isPrev && !isNext) return null;
 
@@ -116,7 +119,7 @@ export default function NFTCarousel({
           gap: "8px",
         }}
       >
-        {images.map((_, index) => (
+        {limitedImages.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}

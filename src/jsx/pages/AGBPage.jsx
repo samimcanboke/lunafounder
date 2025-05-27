@@ -1,4 +1,15 @@
+import { useTranslation } from "react-i18next";
+import ReactCountryFlag from "react-country-flag";
+import { useState } from "react";
+
 export default function LunaAGB() {
+  const { t, i18n } = useTranslation();
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const languages = [
+    { code: "en", country: "GB" },
+    { code: "de", country: "DE" },
+  ];
+
   return (
     <div
       style={{
@@ -10,8 +21,88 @@ export default function LunaAGB() {
       }}
     >
       <div
-        style={{ maxWidth: "48rem", marginLeft: "auto", marginRight: "auto" }}
+        style={{
+          maxWidth: "48rem",
+          marginLeft: "auto",
+          marginRight: "auto",
+          position: "relative",
+        }}
       >
+        <div style={{ position: "absolute", top: "1rem", right: "1rem" }}>
+          <div style={{ position: "relative" }}>
+            <button
+              style={{
+                backgroundColor: "#1C222A",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                padding: "4px 8px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+              }}
+              onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+            >
+              <ReactCountryFlag
+                countryCode={
+                  languages.find((l) => l.code === i18n.language).country
+                }
+                svg
+                style={{ width: "16px", height: "16px" }}
+              />
+              <span style={{ marginLeft: "8px" }}>
+                {i18n.language.toUpperCase()}
+              </span>
+            </button>
+            {langDropdownOpen && (
+              <div
+                style={{
+                  position: "absolute",
+                  top: "100%",
+                  right: 0,
+                  backgroundColor: "#1C222A",
+                  borderRadius: "4px",
+                  marginTop: "4px",
+                  overflow: "hidden",
+                  zIndex: 1000,
+                }}
+              >
+                {languages.map((lang, i) => (
+                  <div
+                    key={lang.code}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "8px 12px",
+                      cursor: "pointer",
+                      color: "white",
+                      fontSize: "14px",
+                      backgroundColor: "#1C222A",
+                      borderBottom:
+                        i !== languages.length - 1
+                          ? "1px solid #2C2f36"
+                          : "none",
+                    }}
+                    onClick={() => {
+                      i18n.changeLanguage(lang.code);
+                      setLangDropdownOpen(false);
+                    }}
+                  >
+                    <ReactCountryFlag
+                      countryCode={lang.country}
+                      svg
+                      style={{ width: "16px", height: "16px" }}
+                    />
+                    <span style={{ marginLeft: "8px" }}>
+                      {lang.code.toUpperCase()}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
         <h1
           style={{
             fontSize: "1.875rem",
@@ -21,7 +112,7 @@ export default function LunaAGB() {
             marginBottom: "2rem",
           }}
         >
-          Allgemeine Geschäftsbedingungen (AGB)
+          {t("agb.title")}
         </h1>
         <h2
           style={{
@@ -32,7 +123,7 @@ export default function LunaAGB() {
             marginBottom: "2rem",
           }}
         >
-          für die Nutzung von LunaLotto und LunaFounder
+          {t("agb.subtitle")}
         </h2>
 
         <div style={{ marginBottom: "2rem" }}>
@@ -45,18 +136,9 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              1. Allgemeine Informationen
+              {t("agb.sections.1.title")}
             </h3>
-            <p style={{ color: "white" }}>
-              LunaLotto und LunaFounder (nachfolgend gemeinsam "Plattform")
-              werden betrieben von der LunaCasino Ltd., einer eingetragenen
-              Gesellschaft mit Sitz in Barbados (Firmenregistrierung: COMPANY
-              NO. 53670). Die Plattform bietet digitale Lotteriedienstleistungen
-              sowie den Verkauf blockchainbasierter NFTs an, die mit passiven
-              Erträgen aus dem LunaCasino verknüpft sind. Die Dienstleistungen
-              unterliegen einer lizenzierten Regulierung gemäß den
-              Glücksspielbestimmungen von Curaçao.
-            </p>
+            <p style={{ color: "white" }}>{t("agb.sections.1.content")}</p>
           </section>
 
           <section style={{ marginBottom: "2rem" }}>
@@ -68,18 +150,9 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              2. Geltungsbereich und Akzeptanz
+              {t("agb.sections.2.title")}
             </h3>
-            <p style={{ color: "white" }}>
-              Diese Allgemeinen Geschäftsbedingungen regeln die Nutzung aller
-              angebotenen Funktionen auf der Plattform, einschließlich des
-              Erwerbs von NFTs, der Teilnahme an Lotterien und der Nutzung des
-              Affiliate-Programms.
-              <br />
-              <br />
-              Mit der Registrierung und Nutzung der Plattform erklären Sie sich
-              mit diesen Bedingungen ausdrücklich einverstanden.
-            </p>
+            <p style={{ color: "white" }}>{t("agb.sections.2.content")}</p>
           </section>
 
           <section style={{ marginBottom: "2rem" }}>
@@ -91,7 +164,7 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              3. Teilnahmebedingungen
+              {t("agb.sections.3.title")}
             </h3>
             <ul
               style={{
@@ -101,32 +174,13 @@ export default function LunaAGB() {
                 color: "white",
               }}
             >
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Die Nutzung der Plattform ist ausschließlich volljährigen
-                Personen erlaubt (mind. 18 Jahre oder das gesetzlich geforderte
-                Mindestalter im jeweiligen Wohnsitzland).
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Nutzer sind verpflichtet, bei der Registrierung vollständige und
-                wahrheitsgemäße Angaben zu ihrer Identität zu machen.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Es liegt in der alleinigen Verantwortung des Nutzers, die
-                jeweiligen gesetzlichen Bestimmungen im eigenen Land zu prüfen
-                und sicherzustellen, dass die Nutzung von Online-Glücksspielen,
-                Lotterien und blockchainbasierten Finanzprodukten wie NFTs
-                zulässig ist.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Der Betreiber übernimmt keine Haftung für Verstöße gegen lokale
-                Gesetze durch einzelne Nutzer. Der Zugang zur Plattform kann
-                technisch eingeschränkt werden, jedoch garantiert der Betreiber
-                keine vollständige Geoblockierung.
-              </li>
+              {t("agb.sections.3.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
             </ul>
           </section>
 
@@ -139,7 +193,7 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              4. NFT-Käufe (LunaFounder)
+              {t("agb.sections.4.title")}
             </h3>
             <ul
               style={{
@@ -149,32 +203,13 @@ export default function LunaAGB() {
                 color: "white",
               }}
             >
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Über die Plattform können Nutzer limitierte LunaFounder NFTs auf
-                der Solana-Blockchain erwerben. Diese NFTs gewähren dem Inhaber
-                bestimmte digitale Nutzungsrechte, darunter monatliche
-                Belohnungen in Form von Profitbeteiligungen am LunaCasino sowie
-                den Zugang zu kostenlosen Lotterie-Tickets.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Der Kauf eines NFTs stellt keinen Erwerb von Anteilen am
-                Unternehmen oder Anspruch auf garantierte Erträge dar.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Die NFTs sind frei übertragbar und können nach Abschluss des
-                offiziellen Verkaufs auf externen NFT-Marktplätzen gehandelt
-                werden. Der Betreiber haftet nicht für Preisschwankungen,
-                Marktverluste oder etwaige Probleme beim Wiederverkauf.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Der Nutzer ist selbst für die sichere Verwahrung seines NFTs und
-                der dazugehörigen Wallet-Zugangsdaten verantwortlich. Bei
-                Verlust des Wallet-Zugangs besteht kein Anspruch auf Ersatz.
-              </li>
+              {t("agb.sections.4.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
             </ul>
           </section>
 
@@ -187,7 +222,7 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              5. Lotterie-Regeln (LunaLotto)
+              {t("agb.sections.5.title")}
             </h3>
             <ul
               style={{
@@ -197,41 +232,13 @@ export default function LunaAGB() {
                 color: "white",
               }}
             >
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                LunaLotto ist eine blockchainbasierte Online-Lotterie, die
-                ausschließlich auf der Solana-Blockchain betrieben wird. Die
-                Ziehungen erfolgen automatisiert durch einen transparenten,
-                manipulationssicheren Smart Contract.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Der Preis für ein Lotterie-Ticket beträgt 5 $. Der gesamte
-                Betrag fließt in den Jackpot und die Gewinnerverteilung - es
-                wird keine zusätzliche Gebühr erhoben.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Die Gewinner werden automatisch durch ein Zufallsverfahren
-                ermittelt. Die Ergebnisse sind auf der Blockchain öffentlich
-                einsehbar.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Gewinne werden automatisch an die Wallet-Adresse des
-                Gewinner-Tickets ausgeschüttet.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Ein Rücktritt vom Ticketkauf oder eine Rückerstattung nach
-                Teilnahme ist ausgeschlossen.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Der Betreiber behält sich vor, Lotterie-Ziehungen bei
-                technischen Störungen, Manipulationsversuchen oder aus
-                regulatorischen Gründen zu verschieben oder auszusetzen.
-              </li>
+              {t("agb.sections.5.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
             </ul>
           </section>
 
@@ -244,7 +251,7 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              6. Affiliate-Programm
+              {t("agb.sections.6.title")}
             </h3>
             <ul
               style={{
@@ -254,35 +261,13 @@ export default function LunaAGB() {
                 color: "white",
               }}
             >
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Die Plattform bietet ein mehrstufiges Affiliate-System, bei dem
-                Nutzer durch die Empfehlung neuer Teilnehmer Provisionen
-                verdienen können.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Für LunaLotto werden bis zu 30 % der Ticketkäufe über 10 Ebenen
-                ausgeschüttet. Die exakte Verteilung ist auf der Website
-                einsehbar.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Für LunaFounder-NFT-Verkäufe gelten eigene Provisionsmodelle.
-                Diese werden separat auf der Verkaufsplattform dargestellt.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Die Auszahlung von Affiliate-Einnahmen erfolgt automatisiert
-                über Smart Contracts oder kann vom Nutzer aktiv abgerufen
-                werden.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Der Missbrauch des Systems durch Mehrfachkonten, Spam oder
-                betrügerische Aktivitäten führt zum sofortigen Ausschluss und
-                Verlust sämtlicher Provisionsansprüche.
-              </li>
+              {t("agb.sections.6.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
             </ul>
           </section>
 
@@ -295,7 +280,7 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              7. Gewinnverteilung und Auszahlung
+              {t("agb.sections.7.title")}
             </h3>
             <ul
               style={{
@@ -305,31 +290,13 @@ export default function LunaAGB() {
                 color: "white",
               }}
             >
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Alle Erträge aus dem LunaCasino, die im Rahmen des
-                LunaFounder-Modells ausgeschüttet werden, basieren auf den
-                realen Netto-Gewinnen der Plattform. Es besteht kein Anspruch
-                auf garantierte, fixe Ausschüttungen.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Ausschüttungen erfolgen regelmäßig (in der Regel monatlich) und
-                werden anteilig gemäß dem NFT-Wert automatisiert oder durch
-                Abruf durch den Nutzer ausgezahlt.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Für technische Verzögerungen oder Übertragungsprobleme auf der
-                Solana-Blockchain kann der Betreiber nicht haftbar gemacht
-                werden.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Gewinne aus der LunaLotto werden automatisch nach Ziehung auf
-                die Wallet des Gewinner-Tickets übertragen. Eine manuelle
-                Auszahlung ist nicht erforderlich.
-              </li>
+              {t("agb.sections.7.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
             </ul>
           </section>
 
@@ -342,7 +309,7 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              8. Rechte und Pflichten der Nutzer
+              {t("agb.sections.8.title")}
             </h3>
             <ul
               style={{
@@ -352,33 +319,13 @@ export default function LunaAGB() {
                 color: "white",
               }}
             >
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Nutzer verpflichten sich zu einem respektvollen Umgang mit
-                anderen Mitgliedern, Partnern, Mitarbeitern sowie dem
-                Unternehmen selbst - sowohl auf der Plattform als auch in
-                öffentlich zugänglichen Kanälen und sozialen Medien.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Der Betreiber behält sich das Recht vor, Nutzer oder
-                Vertriebspartner bei nachgewiesenem Fehlverhalten,
-                Beleidigungen, Verleumdungen oder öffentlicher Rufschädigung
-                gegenüber der Plattform, dem Team oder anderen Nutzern ohne
-                Vorwarnung von der Nutzung auszuschließen.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Ein solcher Ausschluss kann den Entzug von Affiliate-Rechten,
-                Teilnahmevorteilen sowie den Ausschluss vom NFT-Reward-System
-                zur Folge haben.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Der Nutzer ist verpflichtet, geltendes Recht einzuhalten und
-                keine Inhalte zu veröffentlichen oder Handlungen vorzunehmen,
-                die gegen Gesetze, Rechte Dritter oder diese AGB verstoßen.
-              </li>
+              {t("agb.sections.8.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
             </ul>
           </section>
 
@@ -391,7 +338,7 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              9. Haftungsausschluss
+              {t("agb.sections.9.title")}
             </h3>
             <ul
               style={{
@@ -401,30 +348,13 @@ export default function LunaAGB() {
                 color: "white",
               }}
             >
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Die Plattform übernimmt keine Haftung für Verluste, die durch
-                die Volatilität von Kryptowährungen, technische Fehler, Dritte
-                oder externe Marktplätze entstehen.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Es besteht kein Anspruch auf Verfügbarkeit der Plattform zu
-                jeder Zeit. Wartungen, Upgrades oder externe Faktoren können den
-                Betrieb zeitweise beeinträchtigen.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Die Teilnahme an LunaLotto und der Erwerb von NFTs erfolgen auf
-                eigenes Risiko. Es handelt sich nicht um eine
-                Investitionsberatung oder ein Anlageprodukt im klassischen
-                Sinne.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Nutzer tragen die alleinige Verantwortung für ihre Wallets,
-                privaten Schlüssel und die Sicherung ihrer Zugangsdaten.
-              </li>
+              {t("agb.sections.9.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
             </ul>
           </section>
 
@@ -437,7 +367,7 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              10. Datenschutz und Sicherheit
+              {t("agb.sections.10.title")}
             </h3>
             <ul
               style={{
@@ -447,31 +377,13 @@ export default function LunaAGB() {
                 color: "white",
               }}
             >
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Der Schutz der persönlichen Daten und der Privatsphäre der
-                Nutzer hat für die Plattform höchste Priorität.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Es werden nur Daten erhoben, die zur Erbringung der Dienste
-                technisch oder gesetzlich erforderlich sind (z. B.
-                Wallet-Adresse, Empfehlungsstruktur).
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Alle Daten werden gemäß den geltenden Datenschutzvorgaben
-                gespeichert und verarbeitet. Personenbezogene Daten werden nicht
-                an Dritte weitergegeben, es sei denn, dies ist gesetzlich
-                vorgeschrieben oder zur Erfüllung der Dienstleistung notwendig.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Die Kommunikation mit der Plattform sowie sämtliche
-                Transaktionen erfolgen über verschlüsselte Verbindungen. Dennoch
-                liegt die Verantwortung für die Sicherheit der verwendeten
-                Wallets, Zugangsdaten und Endgeräte beim Nutzer.
-              </li>
+              {t("agb.sections.10.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
             </ul>
           </section>
 
@@ -484,7 +396,7 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              11. Rechtswahl und Gerichtsstand
+              {t("agb.sections.11.title")}
             </h3>
             <ul
               style={{
@@ -494,24 +406,13 @@ export default function LunaAGB() {
                 color: "white",
               }}
             >
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Diese AGB unterliegen dem Recht von Barbados, sofern keine
-                zwingenden gesetzlichen Vorschriften im Wohnsitzstaat des
-                Nutzers entgegenstehen.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Für alle Streitigkeiten, die aus oder im Zusammenhang mit der
-                Nutzung der Plattform entstehen, ist - sofern gesetzlich
-                zulässig - der Gerichtsstand in Barbados maßgeblich.
-              </li>
-              <li style={{ marginBottom: "0.5rem" }}>
-                <i class="bi bi-dot"></i>
-                Nutzer sind verpflichtet, sich eigenständig über die Rechtslage
-                in ihrem Land zu informieren und sicherzustellen, dass die
-                Nutzung der angebotenen Dienste rechtlich zulässig ist.
-              </li>
+              {t("agb.sections.11.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
             </ul>
           </section>
 
@@ -524,25 +425,24 @@ export default function LunaAGB() {
                 marginBottom: "1rem",
               }}
             >
-              12. Kontakt
+              {t("agb.contact.title")}
             </h3>
-            <p style={{ color: "white" }}>
-              Bei Fragen zu den AGB, technischen Problemen oder rechtlichen
-              Anliegen können Sie uns jederzeit kontaktieren:
-              <br />
-              <br />
-              LunaCasino Ltd.
-              <br />
-              Registrierungsnummer: COMPANY NO. 53670
-              <br />
-              Firmensitz: Barbados
-              <br />
-              E-Mail: support@lunalotto.io
-              <br />
-              Website: www.lunalotto.io
-              <br />
-              Telegram (Community): @llottocasino
-            </p>
+            <ul
+              style={{
+                listStyleType: "disc",
+                paddingLeft: "1.5rem",
+                marginBottom: "1rem",
+                color: "white",
+              }}
+            >
+              {t("agb.contact.content", { returnObjects: true }).map(
+                (item, index) => (
+                  <li key={index} style={{ marginBottom: "0.5rem" }}>
+                    <i className="bi bi-dot"></i> {item}
+                  </li>
+                )
+              )}
+            </ul>
           </section>
         </div>
       </div>

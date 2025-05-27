@@ -3,28 +3,26 @@ import axiosInstance from "../services/AxiosInstance";
 
 const useUserStore = create((set, get) => ({
   user: null,
+  loginHistory: [],
   loading: false,
   error: null,
   wallet: null,
   walletSet: localStorage.getItem("walletSet") === "true",
 
   setWallet: async (walletAddress) => {
-    const { walletSet } = get();
-    if (!walletSet) {
-      try {
-        set({ loading: true, error: null });
-        await axiosInstance.post("/me/set-wallet", {
-          wallet: walletAddress,
-        });
-        set({ wallet: walletAddress, walletSet: true });
-        localStorage.setItem("walletSet", "true");
-        console.log("Wallet set successfully:", walletAddress);
-      } catch (error) {
-        console.error("Error setting wallet:", error);
-        set({ error: error.message });
-      } finally {
-        set({ loading: false });
-      }
+    try {
+      set({ loading: true, error: null });
+      await axiosInstance.post("/me/set-wallet", {
+        wallet: walletAddress,
+      });
+      set({ wallet: walletAddress, walletSet: true });
+      localStorage.setItem("walletSet", "true");
+      // console.log("Wallet set successfully:", walletAddress);
+    } catch (error) {
+      console.error("Error setting wallet:", error);
+      set({ error: error.message });
+    } finally {
+      set({ loading: false });
     }
   },
 
@@ -33,26 +31,30 @@ const useUserStore = create((set, get) => ({
     try {
       set({ loading: true, error: null });
       const response = await axiosInstance.get("/me/profile");
-      console.log(response.data);
-      set({ user: response.data });
+      // console.log(response.data);
+      set({
+        user: response.data.user,
+        loginHistory: response.data.loginHistory,
+        loading: false,
+      });
     } catch (error) {
       console.error("Error fetching profile:", error);
-      set({ error: error.message });
-    } finally {
-      set({ loading: false });
+      set({ error: error.message, loading: false });
     }
   },
 
   setUserMintNft: async (data) => {
     try {
       set({ loading: true, error: null });
-      const response = await axiosInstance.post("/me/mint-nft", data);
+      const response = await axiosInstance.post("/nft/mint", data);
       set({ user: response.data, loading: false });
+      return response.data;
     } catch (error) {
       set({ error: error.message, loading: false });
       throw error;
     }
   },
+
   // Update user profile
   updateProfile: async (data) => {
     try {

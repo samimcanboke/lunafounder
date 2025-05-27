@@ -1,15 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Card, Spinner } from "react-bootstrap";
-import useUserStore from "../../../store/userStore";
 import { useTranslation } from "react-i18next";
 
-const ProfileCard = ({ userImage }) => {
+const ProfileCard = ({ userImage, user, loading, error }) => {
   const { t } = useTranslation();
-  const { user, loading, error, getProfile } = useUserStore();
-
-  useEffect(() => {
-    getProfile();
-  }, [getProfile]);
 
   if (loading) {
     return (

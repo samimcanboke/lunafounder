@@ -1,30 +1,49 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, ListGroup, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
+import RewardStore from "../../../store/RewardStore";
 
 export default function SelectReward({
   rewards,
   selectedRewardId,
   onSelect,
-  onDelete
+  onDelete,
+  setRewardDetails, // Ensure this prop is passed correctly
 }) {
   const { t } = useTranslation();
+  const [rewardDetails, setLocalRewardDetails] = useState(null);
+
+  const handleSelect = async (rewardId) => {
+    onSelect(rewardId); // Update the selected reward ID
+    try {
+      const rewardDetails = await RewardStore.getRewardDetails(rewardId); // Fetch reward details
+      setLocalRewardDetails(rewardDetails); // Store locally
+      if (typeof setRewardDetails === "function") {
+        setRewardDetails(rewardDetails); // Pass reward details to parent
+      } else {
+        console.error("setRewardDetails is not a function");
+      }
+    } catch (error) {
+      console.error("Error fetching reward details:", error);
+    }
+  };
+
   return (
     <Card>
       <Card.Header>
-        <Card.Title>{t('adminReward.selectReward.title')}</Card.Title>
+        <Card.Title>{t("adminReward.selectReward.title")}</Card.Title>
       </Card.Header>
       <Card.Body className="p-0">
         <ListGroup
           variant="flush"
           style={{ maxHeight: "300px", overflowY: "auto" }}
         >
-          {rewards.map(r => (
+          {rewards.map((r) => (
             <ListGroup.Item
-              key={r.id}
+              key={r._id}
               action
-              active={r.id === selectedRewardId}
-              onClick={() => onSelect(r.id)}
+              active={r._id === selectedRewardId}
+              onClick={() => handleSelect(r._id)} // Call handleSelect
             >
               {r.name}
             </ListGroup.Item>
@@ -37,7 +56,7 @@ export default function SelectReward({
             onClick={() => onDelete(selectedRewardId)}
             disabled={!selectedRewardId}
           >
-            {t('adminReward.selectReward.deleteButton')}
+            {t("adminReward.selectReward.deleteButton")}
           </Button>
         </div>
       </Card.Body>

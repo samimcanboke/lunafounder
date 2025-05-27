@@ -15,18 +15,28 @@ const useAdminRewardsStore = create((set, get) => ({
     }
   },
 
-  createReward: async () => {
-    try {
-      const data = get().formData;
-      const res = await axiosInstance.post("/admin/rewards", data);
-      set(state => ({
-        rewards: [...state.rewards, res.data],
-        formData: { name: "", emoji: "", amount: "", imageUrl: "" }
-      }));
-    } catch (err) {
-      console.error(err);
-    }
-  },
+createReward: async () => {
+  try {
+    const { name, emoji, amount, imageUrl } = get().formData;
+
+    const payload = {
+      name: name.trim(),
+      emoji: emoji.trim(),
+      amount: parseFloat(amount),
+      imageUrl: imageUrl.trim()
+    };
+
+    const res = await axiosInstance.post("/admin/rewards", payload);
+
+    set(state => ({
+      rewards: [...state.rewards, res.data],
+      formData: { name: "", emoji: "", amount: "", imageUrl: "" }
+    }));
+  } catch (err) {
+    console.error("Reward creation failed:", err);
+  }
+},
+
 
   updateReward: async id => {
     try {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useReducer, useState } from "react";
+import { useContext, useReducer, useState, useEffect } from "react";
 import MrLuna3 from "../../../images/MRLuna3.png";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { Collapse } from "react-bootstrap";
@@ -8,7 +8,6 @@ import { Link } from "react-router-dom";
 import { MenuList } from "./Menu";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { ThemeContext } from "../../../context/ThemeContext";
-import useUserStore from "../../../store/userStore";
 
 const reducer = (previousState, updatedState) => ({
   ...previousState,
@@ -21,8 +20,25 @@ const initialState = {
 };
 
 const SideBar = ({ onClick, onClick3, menuToggle }) => {
-  const { user } = useUserStore();
-  const isAdmin = user?.role === "admin";
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // JWT parse helper
+  const parseJwt = (token) => {
+    try {
+      const base64Url = token.split(".")[1];
+      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split("")
+          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+          .join("")
+      );
+      return JSON.parse(jsonPayload);
+    } catch {
+      return null;
+    }
+  };
+
   var d = new Date();
   const {
     iconHover,
@@ -43,6 +59,13 @@ const SideBar = ({ onClick, onClick3, menuToggle }) => {
     [hideOnScroll]
   );
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    const decoded = token && parseJwt(token);
+    setIsAdmin(decoded?.role === "admin");
+  }, []);
+
   const handleMenuActive = (status) => {
     setState({ active: status });
     if (state.active === status) {
@@ -54,6 +77,11 @@ const SideBar = ({ onClick, onClick3, menuToggle }) => {
     if (state.activeSubmenu === status) {
       setState({ activeSubmenu: "" });
     }
+  };
+
+  // Yeni: mobilde sidebar'ı kapatmak için yardımcı
+  const handleCloseSidebarOnMobile = () => {
+    if (window.innerWidth < 992) onClick();
   };
 
   let path = window.location.pathname;
@@ -89,8 +117,10 @@ const SideBar = ({ onClick, onClick3, menuToggle }) => {
               } else {
                 return (
                   <li
-                    className={` ${
-                      state.active === data.title ? "mm-active" : ""
+                    className={`${
+                      state.active === data.title || path === data.to
+                        ? "mm-active"
+                        : ""
                     }`}
                     key={index}
                   >
@@ -100,6 +130,7 @@ const SideBar = ({ onClick, onClick3, menuToggle }) => {
                         className="has-arrow"
                         onClick={() => {
                           handleMenuActive(data.title);
+                          handleCloseSidebarOnMobile();
                         }}
                       >
                         {data.iconStyle}{" "}
@@ -115,7 +146,14 @@ const SideBar = ({ onClick, onClick3, menuToggle }) => {
                         </span>
                       </Link>
                     ) : (
-                      <Link to={data.to}>
+                      <Link
+                        to={data.to}
+                        className={`${path === data.to ? "active-link" : ""}`}
+                        onClick={handleCloseSidebarOnMobile}
+                        style={{
+                          color: path === data.to ? "#fff" : "inherit", // Set text color to white if selected
+                        }}
+                      >
                         {data.iconStyle}{" "}
                         <span className="nav-text">
                           {data.title}
@@ -141,7 +179,8 @@ const SideBar = ({ onClick, onClick3, menuToggle }) => {
                               <li
                                 key={index}
                                 className={`${
-                                  state.activeSubmenu === data.title
+                                  state.activeSubmenu === data.title ||
+                                  path === data.to
                                     ? "mm-active"
                                     : ""
                                 }`}
@@ -155,6 +194,7 @@ const SideBar = ({ onClick, onClick3, menuToggle }) => {
                                       }
                                       onClick={() => {
                                         handleSubmenuActive(data.title);
+                                        handleCloseSidebarOnMobile();
                                       }}
                                     >
                                       {data.title}
@@ -176,27 +216,45 @@ const SideBar = ({ onClick, onClick3, menuToggle }) => {
                                         {data.content &&
                                           data.content.map((data, index) => {
                                             return (
-                                              <>
-                                                <li key={index}>
-                                                  <Link
-                                                    className={`${
+                                              <li key={index}>
+                                                <Link
+                                                  className={`${
+                                                    path === data.to
+                                                      ? "mm-active"
+                                                      : ""
+                                                  }`}
+                                                  to={data.to}
+                                                  onClick={
+                                                    handleCloseSidebarOnMobile
+                                                  }
+                                                  style={{
+                                                    color:
                                                       path === data.to
-                                                        ? "mm-active"
-                                                        : ""
-                                                    }`}
-                                                    to={data.to}
-                                                  >
-                                                    {data.title}
-                                                  </Link>
-                                                </li>
-                                              </>
+                                                        ? "#fff"
+                                                        : "inherit",
+                                                  }}
+                                                >
+                                                  {data.title}
+                                                </Link>
+                                              </li>
                                             );
                                           })}
                                       </ul>
                                     </Collapse>
                                   </>
                                 ) : (
-                                  <Link to={data.to}>{data.title}</Link>
+                                  <Link
+                                    to={data.to}
+                                    className={`${
+                                      path === data.to ? "mm-active active-link" : ""
+                                    }`}
+                                    onClick={handleCloseSidebarOnMobile}
+                                    style={{
+                                      color: path === data.to ? "#fff" : "inherit", // Set text color to white if selected
+                                    }}
+                                  >
+                                    {data.title}
+                                  </Link>
                                 )}
                               </li>
                             );
@@ -212,7 +270,13 @@ const SideBar = ({ onClick, onClick3, menuToggle }) => {
 
         {!menuToggle && (
           <div className="d-flex justify-content-center align-items-center d-none d-lg-flex mt-1">
-            <img src={MrLuna3} alt="MrLuna" />
+            <img
+              src={MrLuna3}
+              alt="MrLuna"
+              style={{
+                pointerEvents: "none", // Prevent fullscreen behavior on iOS
+              }}
+            />
           </div>
         )}
 

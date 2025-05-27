@@ -4,11 +4,11 @@ import Drop from "react-dropzone-uploader";
 
 const DropFile = () => {
   const handleChangeStatus = ({ meta, file }, status) => {
-    console.log(status, meta, file);
+    // console.log(status, meta, file);
   };
 
   const handleSubmit = (files) => {
-    console.log(files.map((f) => f.meta));
+    // console.log(files.map((f) => f.meta));
   };
   return (
     <Drop

@@ -1,84 +1,43 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, {
+  Fragment,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { mintFromCandyMachine } from "../services/MintService";
-import userStore from "../store/userStore";
+import useUserStore from "../store/userStore";
 import useUserAllNftsStore from "../store/userAllNfts";
 import useUserDashboardStore, {
   useUserLatestSales,
 } from "../store/dashboardStore";
+import useLastNftsStore from "../store/lastNftsStore";
+import useUserOldNftsStore from "../store/userOldNfts";
 import TicketCard from "./PagesComponents/DashboardPageComponent/TicketCard";
 import SummaryCards from "./PagesComponents/DashboardPageComponent/SummaryCards";
 import SalesRevenueCard from "./PagesComponents/DashboardPageComponent/SalesRevenueCard";
 import NFTCarouselSection from "./PagesComponents/DashboardPageComponent/NFTCarouselSection";
 import { Button } from "react-bootstrap";
-
-const { setUserMintNft } = userStore();
-const tierConfigs = [
-  {
-    tier: "50",
-    url: "https://arweave.net/jGeiZZeBPyn9iBhpc3gcl2lDV2FpgOAn84a0jMztJuk",
-    cmId: "8Pg2oEwTPaf2yZHhmsLQ3pwKP6LY7AgZjhGUubfrSxYW",
-    authority: "Bq2WXh3cC1E2LmWCfBKHHqU8bTdFHVivUsmP2GtVQ56N",
-    collectionMint: "2hikvwP1MrQaT15kFcLW2sieLsnHErjWFhTUt7HiXG5m",
-    version: 2,
-    col: "2hikvwP1MrQaT15kFcLW2sieLsnHErjWFhTUt7HiXG5m",
-  },
-  {
-    tier: "100",
-    url: "https://gateway.irys.xyz/8CrQdAHs550iRiRBNuPHJjiskKrGye4r5gAc1-kjMQ8",
-    cmId: "4LrQkwD4owXkEmmgKNvo5CWKUmmAjSCAdxXQe1hAyWVd",
-    col: "4WxnmG5xNDqeFnrotL7WYQF9JfAdYyszNZnY6eEKipBe",
-    authority: "Bq2WXh3cC1E2LmWCfBKHHqU8bTdFHVivUsmP2GtVQ56N",
-    collectionMint: "4WxnmG5xNDqeFnrotL7WYQF9JfAdYyszNZnY6eEKipBe",
-    version: 2,
-  },
-  {
-    tier: "500",
-    url: "https://gateway.irys.xyz/KalP9TAyiHF3Egwnmc60pGdH7slwoVq_k5e_if2UQPE",
-    cmId: "CspHh5wjUMesEH6QkAb8HA6EjbXYXzTGxdqK9vewwJc3",
-    col: "H28aTJzDy7Nka1s18nqHL78g2J7mUTbt4b8vPbY9cQJT",
-  },
-  {
-    tier: "1000",
-    url: "https://gateway.irys.xyz/vxuwQHmCMsMT7q5IXL31uRjLJjp526raq1PLK6kCRKc",
-    cmId: "8gmAnr1Z6hXHrc4eUccGtroZZRGCrAJSvkBN8ZKqo9cd",
-    col: "64dF39heZJUq4nZsHhTWcJYD89aFGauL6pCjbBZqQ5Bq",
-  },
-  {
-    tier: "5000",
-    url: "https://gateway.irys.xyz/INZJmYW1wSmdeE6gic_stc9PDmmuVXrAKeGJcriNQno",
-    cmId: "AB8YhJmpJ65DVUjo51AysvYy9eittb4ymjFGSvSkWTjy",
-    col: "Foq4TxJ1VieMAnGE8oHNGdXQPtWZeYrRQeN1ZE7vhw1j",
-  },
-  {
-    tier: "10000",
-    url: "https://gateway.irys.xyz/K3nf8DFlt8zxc6XH_Ar5VdPgRuc8c6_yYNoLnMWzrno",
-    cmId: "ECkxtfx2dDCbQYtdu8G8EgiSBCt2y78Bkc7jVGorCF4z",
-    col: "E48RNxzJwyWh3AQ1BK1Jn7xyNrJ43SMYoojZ14dqUW9G",
-  },
-  {
-    tier: "25000",
-    url: "https://gateway.irys.xyz/7nEBt5MZir9qSgDB77Qri1fyTI38RnDwwMpbkQk4xK8",
-    cmId: "5dQMTBu1r1kAcnLZy24N8o4kuUdaCK6yTWjEQYuYbrcm",
-    col: "A6cPDCRUY7JgxfS66M5ifzkwn5WNSE1ZWcJg6QKX6DtA",
-  },
-  {
-    tier: "50000",
-    url: "https://gateway.irys.xyz/_3-eahwCSzpA7dRVtnuFdVbc3dsdB7GPYI4yheRDqM4",
-    cmId: "676M8JsXGR1sZJnf7ZaZgGk2FPdiCBM8bzkncUo7k6Y3",
-    col: "7pLEZa1PrAjdzDapjdRJgjATffPUPJuWjhkneUUbQVtk",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 function Dashboard() {
   const { changeBackground } = useContext(ThemeContext);
-  const { fetchAllNfts, allNfts } = useUserAllNftsStore();
-  const { fetchDashboard, userDashboardStats = {} } = useUserDashboardStore();
+  const { publicKey, connected, connecting, connect } = useWallet();
+  const { setUserMintNft } = useUserStore();
+  const { allNfts, fetchAllNfts } = useUserAllNftsStore();
+  const { userOldNfts, getOldNfts } = useUserOldNftsStore();
+  const { userDashboardStats, fetchDashboard } = useUserDashboardStore();
   const { fetchLatestSales, latestSales } = useUserLatestSales();
-  const wallet = useWallet();
+  const { lastNfts, fetchLastNfts } = useLastNftsStore();
+  const { t } = useTranslation();
 
   const [tiers, setTiers] = useState([]);
+
+  // detect dev flag
+  const params = new URLSearchParams(window.location.search);
+  const isDev = params.get("dev") === "true";
 
   const {
     ticketCard: {
@@ -100,14 +59,20 @@ function Dashboard() {
   useEffect(() => {
     changeBackground({ value: "dark", label: "Dark" });
     fetchAllNfts();
+    getOldNfts();
     fetchDashboard();
     fetchLatestSales();
-    fetchTierData();
-  }, []);
+    fetchLastNfts(isDev); // fetch last NFTs with dev flag
+  }, [publicKey, connected, connecting]);
+
+  useEffect(() => {
+    if (allNfts?.length) fetchTierData();
+  }, [allNfts]);
+
 
   const fetchTierData = async () => {
     const result = [];
-    for (let config of tierConfigs) {
+    for (let config of allNfts) {
       try {
         const res = await fetch(config.url);
         if (!res.ok) continue;
@@ -121,7 +86,40 @@ function Dashboard() {
   };
 
   const handleMint = async ({ cmId, collectionMint, authority, version }) => {
+    // Determine if we're in dev mode via URL param
+    const params = new URLSearchParams(window.location.search);
+    const isDev = params.get("dev") === "true";
+
+
+
+    if (!connected) {
+      try {
+        await connect();
+        // Wait a moment for the connection to be established
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (error) {
+        console.error("Failed to connect wallet:", error);
+        alert("Failed to connect wallet. Please try again.");
+        return;
+      }
+    }
+
+    if (!publicKey) {
+      alert("Please connect your wallet first!");
+      return;
+    }
+
     try {
+      // Get the current wallet adapter
+      const walletAdapter = window.solana || window.solflare;
+      if (!walletAdapter) {
+        throw new Error(
+          "No compatible wallet found. Please install Phantom or Solflare wallet."
+        );
+      }
+
+
+
       const res = await mintFromCandyMachine(
         {
           publicKey: cmId,
@@ -131,22 +129,50 @@ function Dashboard() {
           rpcUrl:
             "https://yolo-prettiest-daylight.solana-mainnet.quiknode.pro/936aa4affd3be470b2673cf5be2f50e295867270",
         },
-        wallet
+        {
+          publicKey,
+          connected,
+          connecting,
+          signTransaction: walletAdapter.signTransaction.bind(walletAdapter),
+          signAllTransactions:
+            walletAdapter.signAllTransactions.bind(walletAdapter),
+          signMessage: walletAdapter.signMessage.bind(walletAdapter),
+        },
+        isDev
       );
-      await setUserMintNft(res);
+      await setUserMintNft({
+        ...res,
+        isDev,
+      });
     } catch (err) {
       console.error("Mint error:", err);
+      alert(
+        err.message || "An error occurred while minting. Please try again."
+      );
     }
   };
+
+  // build carousel images by matching lastNfts to fetched tiers metadata
+  const carouselImages = useMemo(() => {
+    return lastNfts
+      .map((nft) => {
+        const match = tiers.find(
+          (item) => item.cmId === nft.metadata.publicKey
+        );
+        if (!match?.data) return null;
+        // prefer image over animation_url
+        return match.data.image || match.data.animation_url;
+      })
+      .filter(Boolean);
+  }, [lastNfts, tiers]);
+
+  useEffect(() => {
+
+  }, [carouselImages]);
 
   return (
     <Fragment>
       <div className="row mb-5">
-        <TicketCard
-          howManyTicketsSold={howManyTicketsSold}
-          howManyUser={howManyUser}
-          hoMuchSolana={hoMuchSolana}
-        />
         <SummaryCards
           myFirstLineCount={myFirstLineCount}
           myFirstLineEarnings={myFirstLineEarnings}
@@ -158,8 +184,13 @@ function Dashboard() {
 
       <div className="container mt-5 mb-5">
         <h2 className="text-center text-warning mb-4">
-          🎉 Luna Founder NFT Tiers 🎉
+          {t("dashboard.tiersTitle")}
         </h2>
+        {!connected && (
+          <div className="text-center text-warning mb-4">
+            {t("dashboard.connectWalletPrompt")}
+          </div>
+        )}
         <div className="d-flex flex-wrap justify-content-center gap-4">
           {tiers.map(
             ({ tier, data, cmId, collectionMint, authority, version }) => (
@@ -177,12 +208,13 @@ function Dashboard() {
                 }}
               >
                 <video
+                  controlsList="nofullscreen"
                   src={data.animation_url}
                   autoPlay
                   muted
                   loop
+                  noFullscreen
                   playsInline
-                  controlsList="nofullscreen"
                   style={{
                     width: "200px",
                     height: "320px",
@@ -191,17 +223,24 @@ function Dashboard() {
                   }}
                 />
                 <Button
-                  className="btn  mt-3 w-100"
+                  className="btn mt-3 w-100"
                   style={{
                     fontWeight: "bold",
                     borderRadius: "8px",
                     fontSize: "14px",
+                    background: !connected ? "gray" : undefined,
+                    cursor: !connected ? "not-allowed" : "pointer",
                   }}
                   onClick={() =>
                     handleMint({ cmId, collectionMint, authority, version })
                   }
+                  disabled={!connected || connecting}
                 >
-                  Mint
+                  {connecting
+                    ? t("dashboard.connecting")
+                    : !connected
+                    ? t("dashboard.connectWallet")
+                    : t("dashboard.mint")}
                 </Button>
               </div>
             )
@@ -209,12 +248,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <NFTCarouselSection
-        nftImages={Object.values(allNfts || {})
-          .slice(0, 5)
-          .map((n) => n.metadata?.animation_url || n.metadata?.image)}
-        latestSales={latestSales}
-      />
+      <NFTCarouselSection images={carouselImages} latestSales={lastNfts} />
     </Fragment>
   );
 }

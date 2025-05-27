@@ -47,7 +47,7 @@ export function loginAction(email, password, navigate) {
   return (dispatch) => {
     login(email, password)
       .then((response) => {
-        console.log("Login response in action:", response);
+        // console.log("Login response in action:", response);
         if (response.token) {
           const expirationTime = new Date();
           expirationTime.setHours(expirationTime.getHours() + 24); // 24 hours from now

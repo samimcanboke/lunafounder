@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Dropdown } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
 import Image from "react-bootstrap/Image";
 import LunaLogo from "../../images/logo_luna.png";
 import Ellipse from "../../images/Ellipse.png";
@@ -18,15 +19,34 @@ import GoldSolana from "../../images/GoldSolana.png";
 import GoldDollar from "../../images/GoldDollar.png";
 import GoldNFT from "../../images/GoldNFT.png";
 import GoldHeartCard from "../../images/GoldHeartCard.png";
-import NFTCarousel from "../components/Components/nft-carousel";
-import GoldPaperPlane from "../../images/Gold-PaperPlane.png";
 import PolaroidCardGrid from "../components/Components/landing-cards";
 import useUserAllNftsStore from "../../store/userAllNfts";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useDispatch } from "react-redux";
 
+const getVideoPoster = (videoUrl, timeInSeconds) => {
+  const canvas = document.createElement("canvas");
+  const video = document.createElement("video");
+
+  return new Promise((resolve) => {
+    video.src = videoUrl;
+    video.crossOrigin = "anonymous";
+    video.currentTime = timeInSeconds;
+
+    video.onloadeddata = () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL("image/png"));
+    };
+  });
+};
+
 const Header = () => {
+  const { t, i18n } = useTranslation();
+  const changeLang = (lng) => i18n.changeLanguage(lng);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedCard, setExpandedCard] = useState(null);
   const [tiers, setTiers] = useState([]);
@@ -35,9 +55,12 @@ const Header = () => {
   const { publicKey, connected } = useWallet();
   const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [fiveK, setFiveK] = useState("");
+  const [activeVideo, setActiveVideo] = useState(null);
+  const [videoPosters, setVideoPosters] = useState({});
 
   const handleMint = (tier) => {
-    console.log("Mint clicked for tier:", tier);
+
     try {
       navigate("/login");
     } catch (error) {
@@ -53,119 +76,70 @@ const Header = () => {
     }
   };
 
-  const tierConfigs = [
-    {
-      tier: "50",
-      url: "https://arweave.net/jGeiZZeBPyn9iBhpc3gcl2lDV2FpgOAn84a0jMztJuk",
-      cmId: "8Pg2oEwTPaf2yZHhmsLQ3pwKP6LY7AgZjhGUubfrSxYW",
-      authority: "Bq2WXh3cC1E2LmWCfBKHHqU8bTdFHVivUsmP2GtVQ56N",
-      collectionMint: "2hikvwP1MrQaT15kFcLW2sieLsnHErjWFhTUt7HiXG5m",
-      version: 2,
-      col: "2hikvwP1MrQaT15kFcLW2sieLsnHErjWFhTUt7HiXG5m",
-    },
-    {
-      tier: "100",
-      url: "https://gateway.irys.xyz/8CrQdAHs550iRiRBNuPHJjiskKrGye4r5gAc1-kjMQ8",
-      cmId: "4LrQkwD4owXkEmmgKNvo5CWKUmmAjSCAdxXQe1hAyWVd",
-      col: "4WxnmG5xNDqeFnrotL7WYQF9JfAdYyszNZnY6eEKipBe",
-      authority: "Bq2WXh3cC1E2LmWCfBKHHqU8bTdFHVivUsmP2GtVQ56N",
-      collectionMint: "4WxnmG5xNDqeFnrotL7WYQF9JfAdYyszNZnY6eEKipBe",
-      version: 2,
-    },
-    {
-      tier: "500",
-      url: "https://gateway.irys.xyz/KalP9TAyiHF3Egwnmc60pGdH7slwoVq_k5e_if2UQPE",
-      cmId: "CspHh5wjUMesEH6QkAb8HA6EjbXYXzTGxdqK9vewwJc3",
-      col: "H28aTJzDy7Nka1s18nqHL78g2J7mUTbt4b8vPbY9cQJT",
-    },
-    {
-      tier: "1000",
-      url: "https://gateway.irys.xyz/vxuwQHmCMsMT7q5IXL31uRjLJjp526raq1PLK6kCRKc",
-      cmId: "8gmAnr1Z6hXHrc4eUccGtroZZRGCrAJSvkBN8ZKqo9cd",
-      col: "64dF39heZJUq4nZsHhTWcJYD89aFGauL6pCjbBZqQ5Bq",
-    },
-    {
-      tier: "5000",
-      url: "https://gateway.irys.xyz/INZJmYW1wSmdeE6gic_stc9PDmmuVXrAKeGJcriNQno",
-      cmId: "AB8YhJmpJ65DVUjo51AysvYy9eittb4ymjFGSvSkWTjy",
-      col: "Foq4TxJ1VieMAnGE8oHNGdXQPtWZeYrRQeN1ZE7vhw1j",
-    },
-    {
-      tier: "10000",
-      url: "https://gateway.irys.xyz/K3nf8DFlt8zxc6XH_Ar5VdPgRuc8c6_yYNoLnMWzrno",
-      cmId: "ECkxtfx2dDCbQYtdu8G8EgiSBCt2y78Bkc7jVGorCF4z",
-      col: "E48RNxzJwyWh3AQ1BK1Jn7xyNrJ43SMYoojZ14dqUW9G",
-    },
-    {
-      tier: "25000",
-      url: "https://gateway.irys.xyz/7nEBt5MZir9qSgDB77Qri1fyTI38RnDwwMpbkQk4xK8",
-      cmId: "5dQMTBu1r1kAcnLZy24N8o4kuUdaCK6yTWjEQYuYbrcm",
-      col: "A6cPDCRUY7JgxfS66M5ifzkwn5WNSE1ZWcJg6QKX6DtA",
-    },
-    {
-      tier: "50000",
-      url: "https://gateway.irys.xyz/_3-eahwCSzpA7dRVtnuFdVbc3dsdB7GPYI4yheRDqM4",
-      cmId: "676M8JsXGR1sZJnf7ZaZgGk2FPdiCBM8bzkncUo7k6Y3",
-      col: "7pLEZa1PrAjdzDapjdRJgjATffPUPJuWjhkneUUbQVtk",
-    },
-  ];
-
-  const fetchTierData = async () => {
-    const result = [];
-    for (let config of tierConfigs) {
-      try {
-        const res = await fetch(config.url);
-        if (!res.ok) continue;
-        const json = await res.json();
-        result.push({ ...config, data: json });
-      } catch (err) {
-        console.warn(`❌ ${config.tier} fetch error`, err);
-      }
-    }
-    setTiers(result);
-  };
-
-  useEffect(() => {
-    fetchTierData();
-  }, []);
-
   const { allNfts, fetchAllNfts } = useUserAllNftsStore();
   useEffect(() => {
     fetchAllNfts();
   }, [fetchAllNfts]);
+
+  useEffect(() => {
+    const fetchTierData = async () => {
+      const result = [];
+      for (let config of allNfts || []) {
+        try {
+          const res = await fetch(config.url);
+          if (!res.ok) continue;
+          const json = await res.json();
+          result.push({ ...config, data: json });
+        } catch (err) {
+          console.warn(`❌ ${config.tier} fetch error`, err);
+        }
+      }
+      setTiers(result);
+    };
+    if (allNfts?.length) fetchTierData();
+  }, [allNfts]);
+
+  useEffect(() => {
+    const fetchPosters = async () => {
+      const poster1 = await getVideoPoster(
+        "https://api.lunafounder.io/luna.mp4",
+        30
+      );
+      const poster2 = await getVideoPoster(
+        "https://api.lunafounder.io/luna2.mp4",
+        30
+      );
+      setVideoPosters({ 0: poster1, 1: poster2 });
+    };
+    fetchPosters();
+  }, []);
 
   const nftImages = Object.values(allNfts || {})
     .map((n) => n.metadata?.animation_url || n.metadata?.image)
     .filter(Boolean)
     .slice(0, 5);
 
-  const cards = [
-    {
-      image: GoldWallet,
-      title: "HERUNTERLADEN",
-      subtitle: "PHANTOM WALLET",
-      content:
-        "Laden Sie die Phantom Wallet herunter, um Ihre Krypto-Assets sicher zu speichern und zu verwalten. Verbinden Sie sie mit unserer Plattform für nahtlose Transaktionen und Belohnungsverfolgung.",
-    },
-    {
-      image: GoldenClover,
-      title: "REGISTRIERUNG",
-      subtitle: "FÜR LUNA CASINO",
-      content:
-        "Erstellen Sie Ihr Konto mit dem Empfehlungscode. Erhalten Sie sofortigen Zugang zu exklusiven Boni und erkunden Sie die Welt von Luna Casino.",
-    },
-    {
-      image: GoldNFT,
-      title: "KAUF EINES",
-      subtitle: "NFT",
-      content:
-        "Kaufen Sie limitierte LunaFounder NFTs, um erweiterte Funktionen freizuschalten und monatliche Belohnungen zu erhalten. Erlangen Sie digitales Eigentum an LunaCasino und werden Sie Teil einer wachsenden Web3-Community auf Solana.",
-    },
-  ];
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const tier5kImage = tiers.find((t) => t.tier === "5000")?.data?.image;
+
+  const handleVideoClick = (videoIndex) => {
+    setActiveVideo(videoIndex);
+    document.body.style.overflow = "hidden"; // Disable scrolling
+  };
+
+  const handleOverlayClick = () => {
+    setActiveVideo(null);
+    document.body.style.overflow = ""; // Re-enable scrolling
+  };
+
+  // eklendi: dil bazlı video kaynağı
+  const videoSrc =
+    i18n.language === "de"
+      ? "https://api.lunafounder.io/lunavideo.mp4"
+      : "https://api.lunafounder.io/lunavideo_en.mp4";
 
   return (
     <div>
@@ -240,37 +214,50 @@ const Header = () => {
             </button>
 
             <nav className="d-none d-md-flex align-items-center gap-3 gap-lg-4">
-              <a
+              {/* <a
                 href="#how"
                 className="text-white text-decoration-none fw-medium"
               >
-                So funktioniert's
+                {t("landing.header.how")}
               </a>
               <a
                 href="#buy"
                 className="text-white text-decoration-none fw-medium"
               >
-                Gründer-Minten
-              </a>
+                {t("landing.header.founderMint")}
+              </a> */}
               <a
                 href="https://lunacasino.io/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white text-decoration-none fw-medium"
               >
-                Casino
+                {t("landing.header.casino")}
               </a>
               <a
                 href="/faq"
                 className="text-white text-decoration-none fw-medium"
               >
-                FAQ
+                {t("landing.header.faq")}
               </a>
             </nav>
 
             <div className="d-none d-md-flex align-items-center gap-2">
+              <Dropdown onSelect={changeLang}>
+                <Dropdown.Toggle variant="outline-light" size="sm">
+                  {i18n.language.toUpperCase()}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item eventKey="en">
+                    {t("header.language.en")}
+                  </Dropdown.Item>
+                  <Dropdown.Item eventKey="de">
+                    {t("header.language.de")}
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
               <Button variant="" href="/login" size="sm" className="text-white">
-                Log In
+                {t("landing.header.login")}
               </Button>
               <Button
                 href="/register"
@@ -281,7 +268,7 @@ const Header = () => {
                   color: "#000",
                 }}
               >
-                Registrieren
+                {t("landing.header.register")}
               </Button>
             </div>
           </header>
@@ -293,39 +280,20 @@ const Header = () => {
             >
               <nav className="d-flex flex-column gap-3">
                 <a
-                  href="#how"
+                  href="https://lunacasino.io/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-white text-decoration-none fw-medium"
                   onClick={toggleMenu}
                 >
-                  So funktioniert's
+                  {t("landing.header.casino")}
                 </a>
                 <a
-                  href="#buy"
+                  href="/faq"
                   className="text-white text-decoration-none fw-medium"
                   onClick={toggleMenu}
                 >
-                  Kaufen
-                </a>
-                <a
-                  href="#sell"
-                  className="text-white text-decoration-none fw-medium"
-                  onClick={toggleMenu}
-                >
-                  Verkaufen
-                </a>
-                <a
-                  href="#casino"
-                  className="text-white text-decoration-none fw-medium"
-                  onClick={toggleMenu}
-                >
-                  Casino
-                </a>
-                <a
-                  href="#lotto"
-                  className="text-white text-decoration-none fw-medium"
-                  onClick={toggleMenu}
-                >
-                  Lotto
+                  {t("landing.header.faq")}
                 </a>
               </nav>
               <div className="d-flex gap-2 mt-3">
@@ -334,8 +302,9 @@ const Header = () => {
                   href="/login"
                   size="sm"
                   className="text-white flex-grow-1"
+                  onClick={toggleMenu}
                 >
-                  Log In
+                  {t("landing.header.login")}
                 </Button>
                 <Button
                   className="text-white border-0 flex-grow-1"
@@ -345,8 +314,9 @@ const Header = () => {
                       "linear-gradient(to right, #FFF69F, #D5A554)",
                     color: "#000",
                   }}
+                  onClick={toggleMenu}
                 >
-                  Registrieren
+                  {t("landing.header.register")}
                 </Button>
               </div>
             </div>
@@ -362,8 +332,7 @@ const Header = () => {
                     fontSize: "clamp(2rem, 5vw, 3.5rem)",
                   }}
                 >
-                  Willkommen <br />
-                  bei{" "}
+                  {t("landing.hero.welcome")} <br />
                   <span
                     style={{
                       background: "linear-gradient(to right, #FFD36E, #E79710)",
@@ -371,7 +340,7 @@ const Header = () => {
                       color: "transparent",
                     }}
                   >
-                    Luna Gründer
+                    {t("landing.hero.platformName")}
                   </span>
                 </h1>
 
@@ -382,8 +351,7 @@ const Header = () => {
                     fontSize: "clamp(1rem, 2vw, 1.5rem)",
                   }}
                 >
-                  Ihr Zugang <br />
-                  NFTs und Online-Glücksspiel!
+                  {t("landing.hero.subtitle")}
                 </h2>
 
                 <h2
@@ -393,30 +361,31 @@ const Header = () => {
                     fontSize: "clamp(3rem, 2vw, 1.5rem)",
                   }}
                 >
-                  Ihr Zugang <br />
-                  NFTs und Online-Glücksspiel!
+                  {t("landing.hero.subtitle")}
                 </h2>
 
                 <p
                   className="mb-4 fs-5"
                   style={{ fontSize: "clamp(1rem, 2vw, 1.25rem)" }}
                 >
-                  Jetzt registrieren
+                  {t("landing.hero.registerNow")}
                 </p>
                 <div className="d-flex gap-3 justify-content-center justify-content-md-start">
                   <Button
+                    href="/register"
                     style={{
                       backgroundImage:
                         "linear-gradient(to right, #FFF69F, #D5A554)",
                       color: "#000",
                       border: "none",
+                      zIndex: 3,
                     }}
                   >
-                    Registrieren
+                    {t("landing.hero.registerButton")}
                   </Button>
-                  <Button className="text-decoration-underline" variant="">
-                    So funktioniert's
-                  </Button>
+                  {/* <Button className="text-decoration-underline" variant="">
+                    {t("landing.hero.howWorksButton")}
+                  </Button> */}
                 </div>
 
                 <div className="d-flex flex-wrap gap-3 mt-5 justify-content-center justify-content-md-start">
@@ -428,7 +397,7 @@ const Header = () => {
                       style={{ height: "clamp(32px, 5vw, 48px)" }}
                     />
                     <p className="m-0">
-                      Geschütztes <br /> Zahlungsgateway
+                      {t("landing.benefits.protectedGateway")}
                     </p>
                   </div>
 
@@ -439,9 +408,7 @@ const Header = () => {
                       alt="gold-diamond"
                       style={{ height: "clamp(32px, 5vw, 48px)" }}
                     />
-                    <p className="m-0">
-                      Einfache <br /> Plattformnutzung
-                    </p>
+                    <p className="m-0">{t("landing.benefits.easyPlatform")}</p>
                   </div>
 
                   <div className="d-flex gap-2 align-items-center">
@@ -452,7 +419,7 @@ const Header = () => {
                       style={{ height: "clamp(32px, 5vw, 48px)" }}
                     />
                     <p className="m-0">
-                      Schnelle <br /> Banküberweisung
+                      {t("landing.benefits.fastBankTransfer")}
                     </p>
                   </div>
                 </div>
@@ -475,7 +442,7 @@ const Header = () => {
                     bottom: "30px",
                     left: "50%",
                     transform: "translateX(-50%)",
-                    zIndex: 2,
+                    zIndex: 1,
                     width: "100%",
                   }}
                 >
@@ -532,6 +499,92 @@ const Header = () => {
           className="position-relative"
           style={{ zIndex: 1, maxWidth: "1200px" }}
         >
+          {/* <div className="d-flex position-relative my-5 gap-4">
+            {activeVideo !== null && (
+              <div
+                className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex justify-content-center align-items-center"
+                style={{ zIndex: 99 }} // Set zIndex to 99
+                onClick={handleOverlayClick}
+              >
+                <video
+                  src={
+                    activeVideo === 0
+                      ? "https://api.lunafounder.io/luna.mp4"
+                      : "https://api.lunafounder.io/luna2.mp4"
+                  }
+                  controls
+                  autoPlay
+                  muted
+                  crossOrigin="anonymous"
+                  style={{
+                    width: "80%",
+                    height: "auto",
+                    borderRadius: "10px",
+                    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.5)",
+                    zIndex: 99, // Ensure video is above other elements
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            )}
+            <div
+              className="flex-grow-1 position-relative"
+              style={{
+                cursor: "pointer",
+                overflow: "hidden",
+                transform: activeVideo === 0 ? "scale(1)" : "scale(0.9)", // Slightly shrink when not selected
+                transition: "transform 0.3s ease",
+              }}
+              onClick={() => handleVideoClick(0)}
+            >
+              <video
+                src="https://api.lunafounder.io/luna.mp4"
+                autoPlay
+                muted
+                loop
+                crossOrigin="anonymous"
+                poster={videoPosters[0]} // Set the poster for the first video
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "10px",
+                }}
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div
+              className="flex-grow-1 position-relative"
+              style={{
+                cursor: "pointer",
+                overflow: "hidden",
+                transform: activeVideo === 1 ? "scale(1)" : "scale(0.9)", // Slightly shrink when not selected
+                transition: "transform 0.3s ease",
+              }}
+              onClick={() => handleVideoClick(1)}
+            >
+              <video
+                src="https://api.lunafounder.io/luna2.mp4"
+                autoPlay
+                muted
+                loop
+                crossOrigin="anonymous"
+                poster={videoPosters[1]} // Set the poster for the second video
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  borderRadius: "10px",
+                }}
+              >
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div> */}
+
           <h1
             className="display-4 mb-3"
             style={{
@@ -540,7 +593,7 @@ const Header = () => {
               lineHeight: "1.2",
             }}
           >
-            Ihr Einstieg
+            {t("landing.steps.title")}
           </h1>
           <h6
             className="fw-light mx-auto"
@@ -549,8 +602,7 @@ const Header = () => {
               fontSize: "clamp(0.875rem, 2vw, 1.25rem)",
             }}
           >
-            Laden Sie Phantom herunter, kaufen Sie Solana (SOL) und minten Sie
-            Ihr erstes NFT - schnell und einfach!
+            {t("landing.steps.description")}
           </h6>
 
           <div
@@ -566,11 +618,9 @@ const Header = () => {
                   style={{ width: "60px", height: "60px" }}
                 />
                 <div>
-                  <h3 className="h4 mb-3">
-                    Phantom Wallet installieren & einrichten
-                  </h3>
+                  <h3 className="h4 mb-3">{t("landing.steps.step1.title")}</h3>
                   <p className="mb-0 fw-light">
-                    Installieren Sie die Phantom Wallet für Solana
+                    {t("landing.steps.step1.desc")}
                   </p>
                 </div>
               </div>
@@ -585,9 +635,9 @@ const Header = () => {
                   style={{ width: "60px", height: "60px" }}
                 />
                 <div>
-                  <h3 className="h4 mb-3">Solana (SOL) kaufen</h3>
+                  <h3 className="h4 mb-3">{t("landing.steps.step2.title")}</h3>
                   <p className="mb-0 fw-light">
-                    Kaufen Sie Solana für Ihre Transaktionen
+                    {t("landing.steps.step2.desc")}
                   </p>
                 </div>
               </div>
@@ -602,9 +652,9 @@ const Header = () => {
                   style={{ width: "60px", height: "60px" }}
                 />
                 <div>
-                  <h3 className="h4 mb-3">NFTs prägen</h3>
+                  <h3 className="h4 mb-3">{t("landing.steps.step3.title")}</h3>
                   <p className="mb-0 fw-light">
-                    Erstellen Sie Ihre eigenen NFTs auf der Solana-Blockchain
+                    {t("landing.steps.step3.desc")}
                   </p>
                 </div>
               </div>
@@ -619,9 +669,9 @@ const Header = () => {
                   style={{ width: "60px", height: "60px" }}
                 />
                 <div>
-                  <h3 className="h4 mb-3">Passives Einkommen generieren</h3>
+                  <h3 className="h4 mb-3">{t("landing.steps.step4.title")}</h3>
                   <p className="mb-0 fw-light">
-                    Verdienen Sie passives Einkommen durch unsere Plattform
+                    {t("landing.steps.step4.desc")}
                   </p>
                 </div>
               </div>
@@ -664,7 +714,7 @@ const Header = () => {
                 fontFamily: "Krona One, sans-serif",
               }}
             >
-              Luna Gründer 5K
+              {t("landing.founder5K.title")}
             </h1>
             <div
               className="text-white text-start"
@@ -674,45 +724,44 @@ const Header = () => {
                 fontFamily: "Roboto, sans-serif",
               }}
             >
-              <p>
-                <strong>Ihre Vorteile:</strong>
-              </p>
+              {/* <p>
+                <strong>{t("landing.founder5K.title")}</strong>
+              </p> */}
               <ul className="ps-3" style={{ listStyleType: "disc" }}>
                 <li className="mb-3">
                   <strong>
-                    <i class="bi bi-dot"></i> 15% Profitshare von LunaCasino
+                    <i className="bi bi-dot"></i>{" "}
+                    {t("landing.founder5K.list.profitshare")}
                   </strong>
-                  <br />
-                  Erhalten Sie 15% der Gewinne von LunaCasino als passives
-                  Einkommen
+                  <br /> {t("landing.founder5K.list.profitshareDesc")}
                 </li>
                 <li className="mb-3">
                   <strong>
-                    <i class="bi bi-dot"></i> Automatische Lotto-Tickets
+                    <i className="bi bi-dot"></i>{" "}
+                    {t("landing.founder5K.list.autoLotto")}
                   </strong>
-                  <br />
-                  Automatische Teilnahme an unseren Lotto-Ziehungen
+                  <br /> {t("landing.founder5K.list.autoLottoDesc")}
                 </li>
                 <li className="mb-3">
                   <strong>
-                    <i class="bi bi-dot"></i> Streamline Power
+                    <i className="bi bi-dot"></i>{" "}
+                    {t("landing.founder5K.list.streamlinePower")}
                   </strong>
-                  <br />
-                  Erhöhte Gewinnchancen und exklusive Boni
+                  <br /> {t("landing.founder5K.list.streamlinePowerDesc")}
                 </li>
                 <li className="mb-3">
                   <strong>
-                    <i class="bi bi-dot"></i> Exklusive Zugänge
+                    <i className="bi bi-dot"></i>{" "}
+                    {t("landing.founder5K.list.exclusiveAccess")}
                   </strong>
-                  <br />
-                  Zugang zu exklusiven Events und Angeboten
+                  <br /> {t("landing.founder5K.list.exclusiveAccessDesc")}
                 </li>
                 <li className="mb-3">
                   <strong>
-                    <i class="bi bi-dot"></i> Wertentwicklung & Handel
+                    <i className="bi bi-dot"></i>{" "}
+                    {t("landing.founder5K.list.valueTrade")}
                   </strong>
-                  <br />
-                  Potenzielle Wertsteigerung und Handel Ihrer NFTs
+                  <br /> {t("landing.founder5K.list.valueTradeDesc")}
                 </li>
               </ul>
             </div>
@@ -723,12 +772,12 @@ const Header = () => {
             style={{ maxWidth: "700px", width: "100%" }}
           >
             <img
-              src={GoldHeartCard}
+              src={tier5kImage || GoldHeartCard}
               alt="Golden Card"
               className="img-fluid"
               style={{
                 maxHeight: "700px",
-                width: "auto",
+                width: "100%",
                 height: "auto",
                 maxWidth: "100%",
                 objectFit: "contain",
@@ -770,7 +819,7 @@ const Header = () => {
                 marginBottom: "2rem",
               }}
             >
-              LUNA FOUNDER KOLLEKTIONEN
+              {t("landing.collections.title")}
             </h1>
             <div className="container">
               <div className="row justify-content-center">
@@ -812,6 +861,7 @@ const Header = () => {
                             src={data.animation_url}
                             autoPlay
                             muted
+                            noFullscreen
                             loop
                             playsInline
                             controlsList="nofullscreen"
@@ -830,7 +880,7 @@ const Header = () => {
                           style={{ position: "relative", zIndex: 2 }}
                         >
                           <h5 className="text-center text-white mb-3">
-                            Stufe {tier}
+                            {t("landing.header.level")} {tier}
                           </h5>
                           <Button
                             className="btn w-100"
@@ -849,7 +899,7 @@ const Header = () => {
                             }}
                             onClick={() => handleMint(tier)}
                           >
-                            Minten
+                            {t("dashboard.mint")}
                           </Button>
                         </div>
                       </div>
@@ -883,24 +933,21 @@ const Header = () => {
           }}
         >
           <video
-            width="100%"
-            height="100%"
+            playsInline
             controls
             autoPlay
             muted
             loop
             crossOrigin="anonymous"
             style={{
+              width: "100%",
+              height: "100%",
               borderRadius: "8px",
               boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
               objectFit: "cover",
             }}
           >
-            <source
-              src="https://api.lunafounder.io/lunavideo.mp4"
-              type="video/mp4"
-              crossOrigin="anonymous"
-            />
+            <source src={videoSrc} type="video/mp4" crossOrigin="anonymous" />
             Your browser does not support the video tag.
           </video>
         </div>
@@ -968,22 +1015,38 @@ const Header = () => {
               margin: "0 auto 1.5rem auto",
             }}
           >
-            Luna Lotto und Luna Casino sind innovative Plattformen, die die
-            Welten des Online-Glücksspiels und der Blockchain-Technologie
-            zusammenführen.
+            {t("landing.footer.description")}
           </p>
 
           <div
-            className="d-flex justify-content-center align-items-center mb-3 gap-3"
-            style={{ fontSize: "1.5rem" }}
+            className="d-flex justify-content-center align-items-center mb-3 gap-3 flex-wrap"
+            style={{ fontSize: "clamp(1rem, 5vw, 1.5rem)" }}
           >
-            <i className="bi bi-facebook"></i>
-            <i class="bi bi-twitter"></i>
-            <i className="bi bi-instagram"></i>
+            <a
+              href="https://x.com/lunafounder1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="bi bi-twitter-x"></i>
+            </a>
+            <a
+              href="https://www.tiktok.com/@lunafounder"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="bi bi-tiktok"></i>
+            </a>
+            <a
+              href="https://www.instagram.com/lunafounder.io/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i className="bi bi-instagram"></i>
+            </a>
           </div>
 
           <p className="mb-1" style={{ fontSize: "0.95rem" }}>
-            © 2025 Copyright Lunalotto. Alle Rechte vorbehalten
+            {t("landing.footer.copyright")}
           </p>
 
           <div
@@ -991,7 +1054,7 @@ const Header = () => {
             style={{ fontSize: "0.9rem" }}
           >
             <a href="/agb" className="text-white text-decoration-none">
-              Allgemeine Geschäftsbedingungen (AGB)
+              {t("landing.footer.tos")}
             </a>
           </div>
         </div>

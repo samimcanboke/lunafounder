@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import ReactCountryFlag from "react-country-flag";
 import { Link, useNavigate } from "react-router-dom";
 import { usePrivy } from "@privy-io/react-auth";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -12,6 +14,12 @@ import Button from "../components/custom/button";
 import { Modal } from "antd";
 
 function Login() {
+  const { t, i18n } = useTranslation();
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const languages = [
+    { code: "en", country: "GB" },
+    { code: "de", country: "DE" },
+  ];
   const navigate = useNavigate();
   const { login: privyLogin, authenticated, getAccessToken } = usePrivy();
   const {
@@ -51,17 +59,17 @@ function Login() {
     const errorObj = { email: "", newPassword: "", confirmPassword: "" };
 
     if (!connected) {
-      errorObj.email = "Please connect your wallet to continue";
+      errorObj.email = t("loginExistingPage.errorConnectWallet");
       error = true;
     }
 
     if (newPassword.length < 6) {
-      errorObj.newPassword = "Password must be at least 6 characters";
+      errorObj.newPassword = t("loginExistingPage.errorPasswordMin", { count: 6 });
       error = true;
     }
 
     if (newPassword !== confirmPassword) {
-      errorObj.confirmPassword = "Passwords do not match";
+      errorObj.confirmPassword = t("loginExistingPage.errorPasswordsMismatch");
       error = true;
     }
 
@@ -94,8 +102,72 @@ function Login() {
   return (
     <div
       className="login-main-page"
-      style={{ backgroundImage: "url(" + loginbg + ")" }}
+      style={{ backgroundImage: `url(${loginbg})`, position: "relative" }}
     >
+      {/* language selector */}
+      <div style={{ position: "absolute", top: 20, right: 20 }}>
+        <div style={{ position: "relative" }}>
+          <button
+            onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              color: "#fff",
+            }}
+          >
+            <ReactCountryFlag
+              countryCode={languages.find((l) => l.code === i18n.language).country}
+              svg
+              style={{ width: 16, height: 16 }}
+            />
+            <span style={{ marginLeft: 8 }}>{i18n.language.toUpperCase()}</span>
+          </button>
+          {langDropdownOpen && (
+            <div
+              style={{
+                position: "absolute",
+                top: "100%",
+                right: 0,
+                marginTop: "4px",
+                backgroundColor: "#1C222A",
+                borderRadius: "4px",
+                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                overflow: "hidden",
+                zIndex: 1000,
+              }}
+            >
+              {languages.map((lang, idx) => (
+                <div
+                  key={lang.code}
+                  onClick={() => {
+                    i18n.changeLanguage(lang.code);
+                    setLangDropdownOpen(false);
+                  }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "8px 12px",
+                    cursor: "pointer",
+                    color: "#fff",
+                    borderBottom:
+                      idx < languages.length - 1 ? "1px solid #2C2f36" : "none",
+                  }}
+                >
+                  <ReactCountryFlag
+                    countryCode={lang.country}
+                    svg
+                    style={{ width: 16, height: 16 }}
+                  />
+                  <span style={{ marginLeft: 8 }}>{lang.code.toUpperCase()}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
       <div className="login-wrapper">
         <div className="login-aside-right">
           <div className="row m-0 justify-content-center h-100 align-items-center">
@@ -121,10 +193,10 @@ function Login() {
                             WebkitTextFillColor: "transparent",
                           }}
                         >
-                          Connect Your Wallet
+                          {t("loginExistingPage.titleWallet")}
                         </h3>
                         <p className="fs-6 text-white">
-                          Please connect your wallet to continue
+                          {t("loginExistingPage.subtitleWallet")}
                         </p>
                       </div>
                       {error && (
@@ -140,7 +212,7 @@ function Login() {
                                 style={{ color: connected ? "#fff" : "#fff" }}
                               />
                             }
-                            placeholder="Wallet Address"
+                            placeholder={t("loginExistingPage.placeholderWalletAddress")}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             name="email"
@@ -173,8 +245,8 @@ function Login() {
                             style={{
                               width: "100%",
                               height: "40px",
-                              backgroundColor: "#fff",
-                              color: "#000",
+                              backgroundColor: "#24292d",
+                              color: "white",
                               border: "none",
                               borderRadius: "4px",
                               display: "flex",
@@ -189,7 +261,7 @@ function Login() {
                         <div className="form-group mb-3">
                           <TextInput
                             icon={<LockOutlined style={{ color: "#fff" }} />}
-                            placeholder="New Password"
+                            placeholder={t("loginExistingPage.placeholderNewPassword")}
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             name="newPassword"
@@ -215,7 +287,7 @@ function Login() {
                         <div className="form-group mb-3">
                           <TextInput
                             icon={<LockOutlined style={{ color: "#fff" }} />}
-                            placeholder="Confirm New Password"
+                            placeholder={t("loginExistingPage.placeholderConfirmPassword")}
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             name="confirmPassword"
@@ -245,7 +317,7 @@ function Login() {
                             style={{ width: "100%" }}
                             disabled={loading || !connected}
                           >
-                            Change Password
+                            {t("loginExistingPage.changePasswordButton")}
                           </Button>
                         </div>
                       </form>
@@ -259,7 +331,7 @@ function Login() {
       </div>
 
       <Modal
-        title="Password Changed Successfully"
+        title={t("loginExistingPage.modalTitle")}
         open={showSuccessModal}
         onOk={handleSuccessModalOk}
         onCancel={handleSuccessModalOk}
@@ -271,15 +343,13 @@ function Login() {
             onClick={handleSuccessModalOk}
             style={{ width: "100%" }}
           >
-            OK
+            {t("loginExistingPage.modalOk")}
           </Button>,
         ]}
       >
-        <p>Your password has been changed successfully.</p>
-        <p>
-          Username: <strong>{username}</strong>
-        </p>
-        <p>Please use your username and new password to login.</p>
+        <p>{t("loginExistingPage.modalParagraph1")}</p>
+        <p>{t("loginExistingPage.modalParagraph2", { username })}</p>
+        <p>{t("loginExistingPage.modalParagraph3")}</p>
       </Modal>
     </div>
   );

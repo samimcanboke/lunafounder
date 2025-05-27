@@ -81,7 +81,7 @@ const checkAutoLogin = () => {
 };
 
 const signUp = async (email, password, username, by = "") => {
-  console.log("SignUp called with:", { email, password, username, by });
+  // console.log("SignUp called with:", { email, password, username, by });
 
   if (!email || !password || !username) {
     throw new Error("Email, password and username are required");
@@ -93,7 +93,7 @@ const signUp = async (email, password, username, by = "") => {
       password,
       by,
     };
-    console.log("Sending request with data:", requestData);
+    // console.log("Sending request with data:", requestData);
 
     const response = await axios({
       method: "post",
@@ -105,7 +105,7 @@ const signUp = async (email, password, username, by = "") => {
       },
     });
 
-    console.log("Response received:", response.data);
+    // console.log("Response received:", response.data);
 
     if (response.data && response.data.created) {
       const tokenData = {
@@ -132,7 +132,7 @@ const signUp = async (email, password, username, by = "") => {
 };
 
 const login = async (email, password) => {
-  console.log("Login called with:", { email, password });
+  // console.log("Login called with:", { email, password });
 
   if (!email || !password) {
     throw new Error("Email and password are required");
@@ -152,7 +152,7 @@ const login = async (email, password) => {
       }
     );
 
-    console.log("Login response:", response.data);
+    // console.log("Login response:", response.data);
 
     if (response.data.token) {
       const expirationTime = new Date();

@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 export default function ShareReferralLink({ url }) {
   const { t } = useTranslation();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
     <div className="w-100 mb-3 p-2 p-md-3 rounded text-white">
       <span className="mb-2 d-block">{t('referrals.shareReferralLink')}</span>
@@ -17,10 +25,27 @@ export default function ShareReferralLink({ url }) {
             readOnly
             style={{ backgroundColor: "transparent" }}
           />
-          <i className="bi bi-link-45deg position-absolute" style={{
-            right: "10px", top: "50%", transform: "translateY(-50%)",
-            color: "#fff", cursor: "pointer", fontSize: "1.25rem",
-          }} />
+          {copied ? (
+            <span
+              className="position-absolute"
+              style={{
+                right: "10px", top: "50%", transform: "translateY(-50%)",
+                color: "#fff", padding: "0.2rem 0.5rem", borderRadius: "0.25rem",
+                backgroundColor: "rgba(0,0,0,0.5)", fontSize: "0.9rem"
+              }}
+            >
+              {t('referrals.copied')}
+            </span>
+          ) : (
+            <i
+              className="bi bi-link-45deg position-absolute"
+              style={{
+                right: "10px", top: "50%", transform: "translateY(-50%)",
+                color: "#fff", cursor: "pointer", fontSize: "1.25rem",
+              }}
+              onClick={handleCopy}
+            />
+          )}
         </div>
         <div className="text-white px-3 py-1 rounded d-flex align-items-center mt-2 mt-md-0"
              style={{ minHeight: "38px", border: "1px solid #3e454d", cursor: "default" }}>

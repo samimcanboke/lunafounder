@@ -1,54 +1,123 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import "lightgallery/css/lightgallery.css";
 import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
 import ticket from "../images/gold_ticket.png";
 import wheel from "../images/wheel.png";
+import spinningWheel from "../images/spinning-wheel.gif";
 import empty_ticket from "../images/empty_ticket.png";
 import { useTranslation } from "react-i18next";
+import useTicketsStore from "../store/ticketsStore";
+import { mintFromCandyMachine } from "../services/MintService";
+import { useWallet } from "@solana/wallet-adapter-react";
+import myTicketsStore from "../store/myTicketsStore";
 
 const TicketsPage = () => {
   const { t } = useTranslation();
+  const fetchTickets = useTicketsStore((state) => state.fetchTickets);
+  const tickets = useTicketsStore((state) => state.tickets);
+  const [ticketDetails, setTicketDetails] = useState({});
+  const { publicKey, connected, connecting, connect } = useWallet();
+  const [ticketData, setTicketData] = useState(null);
 
-  const activeTickets = [
-    {
-      id: 1,
-      title: "Active Ticket",
-      price: "$100.00",
-      empty_ticket: empty_ticket,
-    },
-    {
-      id: 2,
-      title: "Active Ticket",
-      price: "$50.00",
-      empty_ticket: empty_ticket,
-    },
-    {
-      id: 3,
-      title: "Active Ticket",
-      price: "$80.00",
-      empty_ticket: empty_ticket,
-    },
-    {
-      id: 4,
-      title: "Active Ticket",
-      price: "$120.00",
-      empty_ticket: empty_ticket,
-    },
-    {
-      id: 5,
-      title: "Active Ticket",
-      price: "$70.00",
-      empty_ticket: empty_ticket,
-    },
-    {
-      id: 6,
-      title: "Active Ticket",
-      price: "$90.00",
-      empty_ticket: empty_ticket,
-    },
-  ];
+  const handleMint = async (candyMachineId) => {
+    if (!connected) {
+      try {
+        await connect();
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait for connection
+      } catch (error) {
+        console.error("Failed to connect wallet:", error);
+        alert(t("tickets.walletConnectFailed"));
+        return;
+      }
+    }
+
+    if (!publicKey) {
+      alert(t("tickets.walletNotConnected"));
+      return;
+    }
+
+    try {
+      const walletAdapter = window.solana || window.solflare;
+      if (!walletAdapter) {
+        throw new Error(
+          t("tickets.noCompatibleWallet")
+        );
+      }
+
+      const response = await mintFromCandyMachine(
+        {
+          publicKey: candyMachineId,
+          rpcUrl:
+            "https://yolo-prettiest-daylight.solana-mainnet.quiknode.pro/936aa4affd3be470b2673cf5be2f50e295867270",
+        },
+        {
+          publicKey,
+          connected,
+          connecting,
+          signTransaction: walletAdapter.signTransaction.bind(walletAdapter),
+          signAllTransactions: walletAdapter.signAllTransactions.bind(walletAdapter),
+          signMessage: walletAdapter.signMessage.bind(walletAdapter),
+        }
+      );
+
+
+      alert(t("tickets.mintSuccess"));
+    } catch (error) {
+      console.error("Mint failed:", error);
+      alert(error.message || t("tickets.mintFailed"));
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await fetchTickets();
+    };
+    fetchData();
+  }, [fetchTickets]);
+
+  useEffect(() => {
+    const fetchTicketDetails = async () => {
+      const details = {};
+      for (const ticket of tickets) {
+        try {
+          const response = await fetch(ticket.url);
+          const data = await response.json();
+          details[ticket._id] = {
+            name: data.name,
+            description: data.description,
+            animation_url: data.animation_url,
+            price: data.attributes.find((attr) => attr.trait_type === "Price")
+              ?.value,
+          };
+        } catch (error) {
+          console.error(`Failed to fetch details for ticket ${ticket._id}:`, error);
+        }
+      }
+      setTicketDetails(details);
+    };
+
+    if (tickets.length > 0) {
+      fetchTicketDetails();
+    }
+  }, [tickets]);
+
+  useEffect(() => {
+    const fetchMyTickets = async () => {
+      try {
+        const data = await myTicketsStore.getMyTickets();
+
+        setTicketData(data);
+      } catch (error) {
+        console.error("Error fetching ticket data:", error);
+      }
+    };
+
+    fetchMyTickets();
+  }, []);
+
+
 
   return (
     <div>
@@ -65,35 +134,61 @@ const TicketsPage = () => {
               <h4 className="text-white">{t('tickets.lotteryTickets')}</h4>
               <h5 className="text-white fw-light mb-3">{t('tickets.activeTicketsTitle')}</h5>
               <div className="d-flex flex-column gap-3 pe-5 mt-5">
-                {activeTickets.map((ticket, index) => (
-                  <div
-                    key={ticket.id}
-                    className="d-flex align-items-center gap-3"
-                    style={{
-                      borderBottom:
-                        index !== activeTickets.length - 1
-                          ? "1px solid rgba(55, 55, 55, 1)"
-                          : "none",
-                      paddingBottom: "1rem",
-                    }}
-                  >
+                {tickets.map((ticket) => {
+                  const details = ticketDetails[ticket._id];
+                  return (
                     <div
-                      className="bg-white rounded d-flex align-items-center justify-content-center"
-                      style={{ width: "64px", height: "64px" }}
+                      key={ticket._id}
+                      className="d-flex align-items-center gap-3"
+                      style={{
+                        borderBottom:
+                          tickets[tickets.length - 1]._id !== ticket._id
+                            ? "1px solid rgba(55, 55, 55, 1)"
+                            : "none",
+                        paddingBottom: "1rem",
+                      }}
                     >
-                      <img
-                        src={ticket.empty_ticket}
-                        alt="ticket"
+                      <div
+                        className="bg-white rounded d-flex align-items-center justify-content-center"
                         style={{ width: "64px", height: "64px" }}
-                      />
+                      >
+                        {details ? (
+                          <video
+                            src={details.animation_url}
+                            autoPlay
+                            loop
+                            muted
+                            style={{
+                              width: "64px",
+                              height: "64px",
+                              borderRadius: "8px",
+                              backgroundColor:"black"
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: "64px",
+                              height: "64px",
+                              backgroundColor: "rgba(200, 200, 200, 0.2)",
+                            }}
+                          />
+                        )}
+                      </div>
+                      <div className="flex-grow-1">
+                        <h6 className="text-white mb-1">
+                          {details ? details.name : "Loading..."}
+                        </h6>
+                        <small className="text-white-50">
+                          {details ? details.description : ""}
+                        </small>
+                      </div>
+                      <div className="text-white">
+                        {details ? details.price : ""}
+                      </div>
                     </div>
-                    <div className="flex-grow-1">
-                      <h6 className="text-white mb-1">{ticket.title}</h6>
-                      <small className="text-white-50">{t('tickets.activeTicketLabel')}</small>
-                    </div>
-                    <div className="text-white">{ticket.price}</div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </Card.Body>
           </Card>
@@ -120,6 +215,7 @@ const TicketsPage = () => {
                       position: "relative",
                       width: "12rem",
                       height: "12.5rem",
+                      marginLeft: "-1rem",
                     }}
                   >
                     {[0, 1, 2].map((index) => (
@@ -129,7 +225,6 @@ const TicketsPage = () => {
                         alt="ticket"
                         style={{
                           width: "14rem",
-
                           objectFit: "contain",
                           position: "absolute",
                           left: `${index * 3.25}rem`,
@@ -139,7 +234,10 @@ const TicketsPage = () => {
                     ))}
                   </div>
 
-                  <div className="text-center flex-grow-1 ms-5">
+                  <div
+                    className="text-center flex-grow-1 ms-5"
+                    style={{ position: "relative", zIndex: 5 }}
+                  >
                     <h4
                       className="mb-0 fs-32 fw-bold"
                       style={{
@@ -163,15 +261,16 @@ const TicketsPage = () => {
                     }}
                   >
                     <img
-                      src={wheel}
+                      src={spinningWheel}
                       alt="wheel"
                       style={{
-                        width: "16rem",
-                        height: "16rem",
+                        width: "18rem",
+                        height: "18rem",
                         position: "absolute",
                         top: "-2.2rem",
                         right: "-3rem",
-                        objectFit: "contain",
+                        objectFit: "cover",
+                        objectPosition: "center",
                       }}
                     />
                   </div>
@@ -194,19 +293,21 @@ const TicketsPage = () => {
                   {/* Çark */}
                   <div
                     style={{
-                      width: "16rem",
-                      height: "16rem",
+                      width: "18rem",
+                      height: "18rem",
                       position: "relative",
                       marginBottom: "1.5rem",
+                      overflow: "hidden",
                     }}
                   >
                     <img
-                      src={wheel}
+                      src={spinningWheel}
                       alt="wheel"
                       style={{
                         width: "100%",
                         height: "100%",
-                        objectFit: "contain",
+                        objectFit: "cover",
+                        objectPosition: "center",
                       }}
                     />
                   </div>
@@ -265,79 +366,60 @@ const TicketsPage = () => {
                   border: "1px solid rgba(55, 55, 55, 1)",
                   borderRadius: "12px",
                   padding: "1.5rem",
-
                   height: "100%",
                   minHeight: "400px",
                   boxShadow: "0 4px 8px rgba(0, 0, 0, 0.65)",
                 }}
               >
-                <div className="row g-3 h-100 align-items-center">
-                  {[
-                    { status: "In Stock", price: "$123.99" },
-                    { status: "Cancelled", price: "$123.99" },
-                    { status: "In Stock", price: "$123.99" },
-                  ].map((item, index) => {
-                    const key = item.status === 'In Stock' ? 'inStock' : 'cancelled';
-                    return (
-                      <div key={index} className="col-lg-4">
-                        <Card
-                          style={{
-                            background: "#1a1a1a",
-                            border: "1px solid rgba(55, 55, 55, 1)",
-                            borderRadius: "12px",
-                            position: "relative",
-                            margin: "0",
-                            overflow: "hidden",
-                          }}
+                <div
+                  className="row g-3 h-100 align-items-center"
+                  style={{ overflowX: "auto", flexWrap: "nowrap" }}
+                >
+                  {tickets.map((ticket) => (
+                    <div
+                      key={ticket._id}
+                      className="col-12 col-md-6 col-lg-4"
+                      style={{ flex: "0 0 auto", minWidth: "300px", cursor: "pointer" }}
+                      onClick={() => handleMint(ticket.candyMachineId)}
+                    >
+                      <Card
+                        style={{
+                          background: "#1a1a1a",
+                          border: "1px solid rgba(55, 55, 55, 1)",
+                          borderRadius: "12px",
+                          position: "relative",
+                          margin: "0",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <Card.Body
+                          className="position-relative d-flex flex-column align-items-center justify-content-center"
+                          style={{ minHeight: "250px", padding: "1.5rem" }}
                         >
-                          <span
-                            style={{
-                              border:
-                                item.status === "In Stock"
-                                  ? "1px solid #28a745"
-                                  : "1px solid #dc3545",
-                              color:
-                                item.status === "In Stock"
-                                  ? "#28a745"
-                                  : "#dc3545",
-                              padding: "4px 12px",
-                              borderRadius: "4px",
-                              fontSize: "12px",
-                              backgroundColor: "transparent",
-                              position: "absolute",
-                              top: "15px",
-                              left: "15px",
-                              zIndex: 2,
-                            }}
-                          >
-                            {t(`tickets.status.${key}`)}
-                          </span>
-                          <div
-                            style={{
-                              position: "absolute",
-                              top: 0,
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              background: `repeating-linear-gradient(
-                              45deg,
-                              transparent,
-                              transparent 10px,
-                              rgba(255, 0, 0, 0.1) 10px,
-                              rgba(255, 0, 0, 0.1) 20px
-                            )`,
-                            }}
-                          ></div>
-                          <Card.Body
-                            className="position-relative d-flex align-items-center justify-content-center"
-                            style={{ minHeight: "180px" }}
-                          >
-                            <h4 className="text-white mb-0">{item.price}</h4>
-                          </Card.Body>
-                        </Card>
-                      </div>
-                    );
-                  })}
+                          <h4 className="text-white mb-2">{ticket.prefix}</h4>
+                          <h5 className="text-white-50 mb-2">
+                            {t('tickets.amount')}: {ticket.amount}
+                          </h5>
+                          <h6 className="text-white mb-3">
+                            {t('tickets.price')}: ${ticket.price}
+                          </h6>
+                          {ticketDetails[ticket._id]?.animation_url && (
+                            <video
+                              src={ticketDetails[ticket._id].animation_url}
+                              autoPlay
+                              loop
+                              muted
+                              style={{
+                                width: "100%",
+                                height: "auto",
+                                borderRadius: "8px",
+                              }}
+                            />
+                          )}
+                        </Card.Body>
+                      </Card>
+                    </div>
+                  ))}
                 </div>
               </Card>
             </div>

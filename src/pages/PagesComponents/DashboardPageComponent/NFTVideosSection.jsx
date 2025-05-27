@@ -38,7 +38,7 @@ const NFTVideosSection = ({ nftItems, handleMint }) => {
           <video
             ref={(el) => (videoRefs.current[idx + offset] = el)}
             muted
-            playsInline
+            playsInline // Ensure videos play inline on iOS
             loop
             style={{ width: "200px", height: "340px", objectFit: "cover" }}
           >

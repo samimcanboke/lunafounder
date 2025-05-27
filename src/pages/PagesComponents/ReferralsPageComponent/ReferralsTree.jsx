@@ -1,14 +1,35 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-export default function ReferralsTree({ data, zoomLevel, setZoomLevel }) {
+export default function ReferralsTree({
+  data, zoomLevel, setZoomLevel,
+  expandAllCount, collapseAllCount, searchTerm
+}) {
   const svgRef = useRef();
   const nodeIdRef = useRef(0);
-  const zoomBehavior = d3.zoom()
-    .scaleExtent([0.5, 2])
-    .on("zoom", e => {
-      d3.select(svgRef.current).select("g").attr("transform", e.transform);
-    });
+  const zoomBehavior = d3.zoom().on("zoom", e => {
+    d3.select(svgRef.current).select("g")
+      .attr("transform", e.transform);
+    setZoomLevel(e.transform.k);
+  });
+
+  // collapse/expand helpers
+  const collapseAll = node => {
+    if (node.children) {
+      node._children = node.children;
+      node._children.forEach(collapseAll);
+      node.children = null;
+    }
+  };
+  const expandAll = node => {
+    if (node._children) {
+      node.children = node._children;
+      node.children.forEach(expandAll);
+      node._children = null;
+    } else if (node.children) {
+      node.children.forEach(expandAll);
+    }
+  };
 
   useEffect(() => {
     if (!data) return;
@@ -17,34 +38,53 @@ export default function ReferralsTree({ data, zoomLevel, setZoomLevel }) {
       if (!svgEl) return;
       d3.select(svgEl).selectAll("*").remove();
       const cw = svgEl.parentElement.clientWidth;
-      const margin = { top: 20, right: cw < 768 ? 40 : 90, bottom: 30, left: cw < 768 ? 40 : 90 };
+      const margin = {
+        top: 20,
+        right: cw < 768 ? 40 : 90,
+        bottom: 30,
+        left: cw < 768 ? 40 : 90
+      };
       const w = cw - margin.left - margin.right;
       const h = Math.min(500, w * 0.6) - margin.top - margin.bottom;
+      const nodeWidth = cw < 768 ? 80 : 120;
+      const nodeHeight = cw < 768 ? 40 : 70;
+      const horizontalSpacing = nodeWidth + (cw < 768 ? 20 : 30);
+      const verticalSpacing = nodeHeight + (cw < 768 ? 20 : 30);
+      const initialScale = 0.8;
+      const extraY = 30;
+
+      const treemap = d3.tree()
+        .nodeSize([verticalSpacing, horizontalSpacing]);
+
+      const root = d3.hierarchy(data);
+      root.x0 = 0; root.y0 = h / 2;
+
+      // apply collapse/expand
+      if (collapseAllCount) collapseAll(root);
+      if (expandAllCount) expandAll(root);
+
+      const treeData = treemap(root);
+      const nodes = treeData.descendants(), links = nodes.slice(1);
+      const offsetY = h / 2 - root.x;
+
       const svg = d3.select(svgEl)
         .call(zoomBehavior)
         .attr("width", w + margin.left + margin.right)
         .attr("height", h + margin.top + margin.bottom)
-        .append("g").attr("transform", `translate(${margin.left},${margin.top})`);
-      const treemap = d3.tree().size([w, h]);
-      const root = d3.hierarchy(data);
-      root.x0 = w/2; root.y0 = 0;
-      const treeData = treemap(root);
-      const nodes = treeData.descendants(), links = nodes.slice(1);
-      nodes.forEach(d => { d.y = d.depth * (cw<768?70:100); });
-      const diagonal = d3.linkVertical().x(d=>d.x).y(d=>d.y);
+        .append("g")
+        .attr("transform",
+          `translate(${margin.left + extraY},${margin.top + offsetY}) scale(${initialScale})`
+        );
 
       const node = svg.selectAll("g.node")
         .data(nodes, d => d.id || (d.id = ++nodeIdRef.current));
-      // define box size
-      const nodeWidth = cw < 768 ? 80 : 120;
-      const nodeHeight = cw < 768 ? 40 : 70;
       // enter new nodes
       const enter = node.enter()
         .append("g")
         .attr("class", "node")
         // shift group so rect is centered on original x,y
         .attr("transform", d =>
-          `translate(${d.x - nodeWidth/2},${d.y - nodeHeight/2})`
+          `translate(${d.y - nodeWidth / 2},${d.x - nodeHeight / 2})`
         );
       // draw rectangle instead of circle
       enter.append("rect")
@@ -70,20 +110,48 @@ export default function ReferralsTree({ data, zoomLevel, setZoomLevel }) {
         .style("font-size", cw < 768 ? "10px" : "12px");
 
       svg.selectAll("path.link")
-        .data(links, d=>d.id)
+        .data(links, d => d.id)
         .enter()
-        .insert("path","g")
-        .attr("class","link")
-        .attr("d", d=> diagonal({ source:{x:d.parent.x,y:d.parent.y}, target:{x:d.x,y:d.y} }))
-        .style("fill","none")
-        .style("stroke","rgba(231,151,16,0.5)")
-        .style("stroke-width","1.5px");
+        .insert("path", "g")
+        .attr("class", "link")
+        .attr("d", d => {
+          // start at parent’s right edge, end at child’s left edge
+          const startX = d.parent.y + nodeWidth / 2;
+          const startY = d.parent.x;
+          const endX   = d.y - nodeWidth / 2;
+          const endY   = d.x;
+          const midX   = (startX + endX) / 2;
+          // cubic‐Bezier: (start) → (midX,startY) → (midX,endY) → (end)
+          return `M${startX},${startY}C${midX},${startY} ${midX},${endY} ${endX},${endY}`;
+        })
+        .style("fill", "none")
+        .style("stroke", "rgba(231,151,16,0.5)")
+        .style("stroke-width", "1.5px");
+
+      // if searching, center on match
+      if (searchTerm) {
+        const lower = searchTerm.toLowerCase();
+        const match = nodes.find(d =>
+          (d.data.username || d.data.name).toLowerCase() === lower
+        );
+        if (match) {
+          const scale = initialScale;
+          const tx = margin.left + extraY - match.y * scale;
+          const ty = margin.top + h / 2 - match.x * scale;
+          const transform = d3.zoomIdentity
+            .translate(tx, ty)
+            .scale(scale);
+          d3.select(svgEl)
+            .transition().duration(750)
+            .call(zoomBehavior.transform, transform);
+        }
+      }
     };
 
     window.addEventListener("resize", resize);
     resize();
     return () => window.removeEventListener("resize", resize);
-  }, [data]);
+  }, [data, expandAllCount, collapseAllCount, searchTerm]);
 
   return <svg ref={svgRef}></svg>;
 }

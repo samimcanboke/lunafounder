@@ -30,7 +30,7 @@ export default function CardComponent() {
     },
     {
       image: GoldNFT,
-      title: "BUYING AN",
+      title: "BUYING A",
       subtitle: "NFT",
       content:
         "Purchase limited LunaFounder NFTs to unlock advanced features and receive monthly rewards. Gain digital ownership in LunaCasino and become part of a growing Web3 community on Solana.",

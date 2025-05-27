@@ -40,6 +40,52 @@ const useAuthStore = create(
         }
       },
 
+      forgotPassword: async (wallet) => {
+        try {
+          set({ loading: true, error: null });
+          const response = await fetch(
+            "https://api.lunafounder.io/api/auth/forgot-password",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ wallet }),
+            }
+          );
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Request failed");
+          }
+          set({ loading: false });
+          return { success: true };
+        } catch (error) {
+          set({ error: error.message, loading: false });
+          return { success: false, error: error.message };
+        }
+      },
+
+      resetPassword: async (token, newPassword) => {
+        try {
+          set({ loading: true, error: null });
+          const response = await fetch(
+            "https://api.lunafounder.io/api/auth/reset-password",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ token, newPassword }),
+            }
+          );
+          const data = await response.json();
+          if (!response.ok) {
+            throw new Error(data.error || "Password reset failed");
+          }
+          set({ loading: false });
+          return { success: true };
+        } catch (error) {
+          set({ error: error.message, loading: false });
+          return { success: false, error: error.message };
+        }
+      },
+
       changeExistingPassword: async (walletAddress, newPassword) => {
         try {
           set({ loading: true, error: null });

@@ -1,9 +1,4 @@
-import React from "react";
 import { useTranslation } from "react-i18next";
-import userTop from "../../../images/user-top.png";
-import dollarTop from "../../../images/dollar-top.png";
-import userDown from "../../../images/user-down.png";
-import dollarDown from "../../../images/dollar-down.png";
 
 const SummaryCards = ({
   myFirstLineCount,
@@ -13,13 +8,32 @@ const SummaryCards = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <div className="col-xl-6 col-xxl-7 col-lg-6">
-      <div className="row">
-        <div className="col-sm-6 order-1 order-sm-1">
+    <div className="container">
+      <div className="row mb-4 d-flex justify-content-center">
+        <div className="col-10">
+          <video
+            src="/videos/db1.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              width: "100%",
+              height: "auto",
+              borderRadius: "10px",
+              backgroundColor: "black",
+            }}
+          >
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+      <div className="row g-3">
+        <div className="col-12 col-sm-6 col-lg-3">
           <div
             className="card overflow-hidden py-5 px-3"
             style={{
-              backgroundImage: `url(${userTop})`,
+              // backgroundImage: `url(${userTop})`,
               backgroundPosition: "right bottom",
               backgroundSize: "auto 50%",
               backgroundRepeat: "no-repeat",
@@ -43,11 +57,11 @@ const SummaryCards = ({
             </div>
           </div>
         </div>
-        <div className="col-sm-6 order-3 order-sm-2">
+        <div className="col-12 col-sm-6 col-lg-3">
           <div
             className="card overflow-hidden py-5 px-3"
             style={{
-              backgroundImage: `url(${dollarTop})`,
+              // backgroundImage: `url(${dollarTop})`,
               backgroundPosition: "right bottom",
               backgroundSize: "auto 50%",
               backgroundRepeat: "no-repeat",
@@ -71,11 +85,11 @@ const SummaryCards = ({
             </div>
           </div>
         </div>
-        <div className="col-sm-6 order-2 order-sm-3">
+        <div className="col-12 col-sm-6 col-lg-3">
           <div
             className="card overflow-hidden py-5 px-3"
             style={{
-              backgroundImage: `url(${userDown})`,
+              // backgroundImage: `url(${userDown})`,
               backgroundPosition: "right top",
               backgroundSize: "auto 37%",
               backgroundRepeat: "no-repeat",
@@ -99,11 +113,11 @@ const SummaryCards = ({
             </div>
           </div>
         </div>
-        <div className="col-sm-6 order-4 order-sm-4">
+        <div className="col-12 col-sm-6 col-lg-3">
           <div
             className="card overflow-hidden py-5 px-3"
             style={{
-              backgroundImage: `url(${dollarDown})`,
+              // backgroundImage: `url(${dollarDown})`,
               backgroundPosition: "right top",
               backgroundSize: "auto 50%",
               backgroundRepeat: "no-repeat",

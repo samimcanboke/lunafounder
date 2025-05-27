@@ -11555,9 +11555,7 @@ a:hover, a:focus, a.active {
 }
 .hamburger {
   display: inline-block;
-  left: 0px;
   position: relative;
-  top: 3px;
   -webkit-transition: all 0.3s ease-in-out 0s;
   transition: all 0.3s ease-in-out 0s;
   width: 26px;

@@ -7,12 +7,82 @@
     "profile": "Profil",
     "logout": "Abmelden"
   },
+  "landing": {
+    "header": {
+      "how": "So funktioniert's",
+      "founderMint": "Gründer-Mint",
+      "casino": "Casino",
+      "faq": "FAQ",
+      "login": "Anmelden",
+      "register": "Registrieren",
+      "sell": "Verkaufen",
+      "lotto": "Lotto",
+      "level": "Stufe"
+    },
+    "collections": {
+      "title": "LUNA COLLECTIONS"
+    },
+    "hero": {
+      "welcome": "Willkommen",
+      "platformName": "Luna Gründer",
+      "subtitle": "Ihr Zugang zu NFTs und Online-Glücksspiel!",
+      "registerNow": "Jetzt registrieren",
+      "registerButton": "Registrieren",
+      "howWorksButton": "So funktioniert's"
+    },
+    "benefits": {
+      "protectedGateway": "Geschütztes Zahlungsgateway",
+      "easyPlatform": "Einfache Plattformnutzung",
+      "fastBankTransfer": "Schnelle Banküberweisung"
+    },
+    "steps": {
+      "title": "Ihr Einstieg",
+      "description": "Laden Sie Phantom herunter, kaufen Sie Solana (SOL) und minten Sie Ihr erstes NFT – schnell und einfach!",
+      "step1": {
+        "title": "Phantom Wallet installieren & einrichten",
+        "desc": "Installieren Sie die Phantom Wallet für Solana"
+      },
+      "step2": {
+        "title": "Solana (SOL) kaufen",
+        "desc": "Kaufen Sie Solana für Ihre Transaktionen"
+      },
+      "step3": {
+        "title": "NFTs prägen",
+        "desc": "Erstellen Sie Ihre eigenen NFTs auf der Solana-Blockchain"
+      },
+      "step4": {
+        "title": "Passives Einkommen generieren",
+        "desc": "Verdienen Sie passives Einkommen durch unsere Plattform"
+      }
+    },
+    "founder5K": {
+      "title": "Luna Gründer 5K",
+      "list": {
+        "profitshare": "15% Profitshare von LunaCasino",
+        "profitshareDesc": " Du erhältst monatlich einen Anteil an den Netto-Gewinnen von LunaCasino – anteilig nach NFT-Wert.",
+        "autoLotto": "Automatische Lotto-Tickets",
+        "autoLottoDesc": "Jeden Monat bekommst du neue Tickets für LunaLotto – kostenlos mintbar.",
+        "streamlinePower": "Streamline Power",
+        "streamlinePowerDesc": "Ab 500 $ bist du in der *globalen Rangliste* für Leader-Rewards – dein 5K NFT bringt dir 10x mehr als ein 500er!",
+        "exclusiveAccess": "Exklusive Zugänge",
+        "exclusiveAccessDesc": "VIP-Zugang zu Beta-Phasen, Events, Airdrops und mehr.",
+        "valueTrade": "Wertentwicklung & Handel",
+        "valueTradeDesc": "Deine NFTs sind *nach Abschluss des Verkaufs* auf dem Solana-Marktplatz handelbar – limitiert & deflationär."
+      }
+    },
+    "footer": {
+      "description": "Luna Lotto und Luna Casino sind innovative Plattformen, die die Welten des Online-Glücksspiels und der Blockchain-Technologie zusammenführen.",
+      "copyright": "© 2025 Lunalotto. Alle Rechte vorbehalten",
+      "tos": "Allgemeine Geschäftsbedingungen (AGB)"
+    }
+  },
   "dashboard": {
     "ticketCard": {
       "soldToday": "Tickets heute verkauft",
       "pcs": "Stück",
       "prize": "Preis",
-      "viewDetail": "Details anzeigen"
+      "viewDetail": "Details anzeigen",
+      "mint": "Minten"
     },
     "salesRevenueCard": {
       "title": "Umsatzerlös",
@@ -26,7 +96,7 @@
       "founderCollections": "LUNA FOUNDER-SAMMLUNGEN",
       "latestSales": "Neueste Verkäufe"
     },
-    "mint": "Prägen",
+    "mint": "Minten",
     "tiersTitle": "🎉 Luna Gründer NFT-Stufen 🎉",
     "videoUnsupported": "Ihr Browser unterstützt das Video-Tag nicht.",
     "summaryCards": {
@@ -34,10 +104,15 @@
       "team": "Team",
       "count": "Anzahl",
       "earnings": "Einnahmen"
-    }
+    },
+    "connectWalletPrompt": "Bitte verbinden Sie Ihre Wallet, um NFTs zu prägen",
+    "connectWallet": "Wallet verbinden",
+    "connecting": "Verbinden..."
   },
   "referrals": {
     "none": "Keine",
+    "walletModalText": "Wenn Sie vor mindestens 5 Minuten eine NFT-Mint-Transaktion durchgeführt haben, wechseln Sie bitte nicht die Wallet.",
+    "walletModalButton": "OK",
     "wallet": "Meine Brieftasche",
     "shareReferralLink": "Teile den Empfehlungslink",
     "inviteFriends": "Lade deine Freunde ein",
@@ -47,10 +122,15 @@
     "collapseAll": "Alle reduzieren",
     "zoomIn": "Vergrößern",
     "zoomOut": "Verkleinern",
+    "searchPlaceholder": "Benutzername",
+    "copied": "Kopiert",
     "levels": {
       "depth": "Tiefe",
-      "peopleActive": "Personen/Aktiv"
-    }
+      "people": "Personen"
+    },
+    "walletMismatchText": "Adapter-Wallet-Adresse: {{adapterWallet}}, Ihre System-Wallet-Adresse: {{systemWallet}}. Möchten Sie Ihre Wallet wechseln?",
+    "walletModalYes": "Ja",
+    "walletModalNo": "Nein"
   },
   "profilePage": {
     "profilePictureAlt": "{{name}}",
@@ -59,6 +139,7 @@
     "teamEarnings": "Teameinnahmen",
     "creditCardForm": "Kreditkartenformular",
     "mintNewNfts": "Neue NFTs prägen",
+    "mintOldNFts": "Alte NFTs prägen",
     "yourReferrals": "Ihre Empfehlungen",
     "directReferrals": "{{count}} direkte Empfehlungen",
     "table": {
@@ -68,7 +149,9 @@
     },
     "noReferrals": "Keine Empfehlungen gefunden",
     "statusActive": "Aktiv",
-    "pcs": "Stück"
+    "pcs": "Stück",
+    "buyNftTiers": "NFT-Stufen kaufen",
+    "buyWithCreditCard": "Mit Kreditkarte kaufen"
   },
   "settings": {
     "profileCard": {
@@ -104,7 +187,11 @@
       "placeholderEmailAddress": "Ihre E-Mail-Adresse",
       "country": "LAND",
       "selectCountry": "Land wählen",
-      "countryOptions": { "us": "Vereinigte Staaten", "de": "Deutschland", "other": "Andere" },
+      "countryOptions": {
+        "us": "Vereinigte Staaten",
+        "de": "Deutschland",
+        "other": "Andere"
+      },
       "postalCode": "POSTLEITZAHL",
       "selectPostalCode": "Postleitzahl wählen",
       "postalCodeOptions": { "code1": "12345", "code2": "67890" },
@@ -149,18 +236,68 @@
   },
   "badges": {
     "ranksTitle": "Ränge",
-    "noBadge": "Kein Abzeichen",
+
+    "noBadge": "Kein Ränge",
     "totalScore": "Gesamtpunktzahl {{score}} USD.",
     "confidenceCannotBeEvaluated": "Vertrauen kann nicht bewertet werden",
     "searchPlaceholder": "Name, Telefon etc. durchsuchen…",
     "table": {
       "name": "Name",
       "wallet": "Brieftasche",
-      "sales": "Umsatz"
+      "sales": "Umsatz",
+      "from": "Von",
+      "price": "Preis",
+      "level": "Ebene",
+      "rate": "Bewertung",
+      "code": "Code",
+      "totalWorth": "Gesamtwert",
+      "totalReferrals": "Empfehlungen Insgesamt",
+      "totalRewards": "Gesamtbelohnungen"
     },
     "modal": {
       "levelInfo": "Ebeneninfo",
-      "close": "Schließen"
+      "close": "Schließen",
+      "teamumsatz": "Teamumsatz",
+      "prize": "Preis",
+      "rule": "Regel"
+    }
+  },
+  "ranksList": {
+    "1": {
+      "name": "Lucky Star",
+      "teamumsatz": "50.000 USDT",
+      "prize": "MacBook Air oder 2.000 USDT Barbonus",
+      "rule": "Mindestens 25.000 USDT aus der 2.ten Struktur"
+    },
+    "2": {
+      "name": "High Roller",
+      "teamumsatz": "100.000 USDT",
+      "prize": "2 iPhone 16 Pro Max oder 5.000 USDT Barbonus",
+      "rule": "Mindestens 50.000 USDT aus der 2.ten Struktur"
+    },
+    "3": {
+      "name": "Jackpot Master",
+      "teamumsatz": "500.000 USDT",
+      "prize": "Rolex oder 10.000 USDT Barbonus",
+      "rule": "Mindestens 250.000 USDT aus der 2.ten Struktur"
+    },
+    "4": {
+      "name": "Royal Ace",
+      "teamumsatz": "1.000.000 USDT",
+      "prize": "Traumreise für zwei oder 20.000 USDT Barbonus",
+      "rule": "Mindestens 550.000 USDT aus einer zweiten Struktur"
+    },
+    "5": {
+      "name": "Casino Tycoon",
+      "teamumsatz": "2.500.000 USDT",
+      "prize": "Jaguar XE oder 50.000 USDT Barbonus",
+      "rule": "Mindestens 1.250.000 USDT aus einer zweiten Struktur"
+    },
+    "6": {
+      "name": "Grand High Roller",
+      "teamumsatz": "5.000.000 USDT",
+      "prize": "Luxusauto (z.B. Ferrari) oder 200.000 USDT Barbonus",
+      "rule": "Mindestens 2.500.000 USDT aus einer zweiten Struktur"
     }
   },
   "tickets": {
@@ -168,6 +305,8 @@
     "activeTicketsTitle": "Aktive Tickets",
     "activeTicketLabel": "Aktives Ticket",
     "nextDraw": "{{date}} GMT: {{time}}",
+    "amount": "Anzahl",
+    "price": "Preis",
     "status": {
       "inStock": "Auf Lager",
       "cancelled": "Storniert"
@@ -182,7 +321,10 @@
       "disconnect": "Trennen",
       "connect": "Verbinden",
       "selectWallet": "Wallet auswählen"
-    }
+    },
+    "mismatchTitle": "Wallet-Adresse stimmt nicht mit der in den Einstellungen überein",
+    "mismatchDescription": "Bitte überprüfen Sie Ihre Wallet-Adresse in den Einstellungen und stellen Sie sicher, dass Sie die richtige Wallet verwenden. Andernfalls können Ihre NFT- und Ticketkäufe fehlschlagen.",
+    "dismiss": "Schließen"
   },
   "adminReward": {
     "selectUser": {
@@ -195,7 +337,9 @@
       "userIdPlaceholder": "Benutzer-ID",
       "tickets": "Tickets des Benutzers",
       "ticketsPlaceholder": "Tickets",
-      "giveReward": "Belohnung vergeben"
+      "giveReward": "Belohnung vergeben",
+      "confirmationMessage": "Sind Sie sicher, dass Sie die Belohnung an diesen Benutzer vergeben möchten?",
+      "successMessage": "Belohnung erfolgreich vergeben!"
     },
     "selectReward": {
       "title": "Belohnung auswählen",
@@ -231,7 +375,319 @@
       "joinDate": "Beitrittsdatum:",
       "nfts": "NFTs:",
       "lastOrder": "Letzte Bestellung:",
-      "totalSpend": "Gesamtausgaben:"
+      "totalSpend": "Gesamtausgaben:",
+      "username": "Benutzername",
+      "wallet": "Wallet",
+      "count": "Anzahl",
+      "nftName": "NFT-Name",
+      "price": "Preis",
+      "signature": "Signatur",
+      "paid": "Bezahlt",
+      "copied": "Kopiert"
     }
+  },
+  "userNfts": {
+    "table": {
+      "username": "Benutzername",
+      "wallet": "Wallet",
+      "count": "Anzahl",
+      "nftName": "NFT-Name",
+      "date": "Datum",
+      "signature": "Signatur",
+      "paid": "Bezahlt",
+      "copied": "Kopiert"
+    }
+  },
+  "mintedNftsPage": {
+    "table": {
+      "username": "Benutzername",
+      "nftName": "NFT-Name",
+      "level": "Ebene",
+      "wallet": "Wallet",
+      "price": "Preis",
+      "rate": "Rate",
+      "paid": "Bezahlt"
+    },
+    "modal": {
+      "title": "Zahlungsstatus bestätigen",
+      "txHash": "Transaktions-Hash",
+      "markPaid": "Als bezahlt markieren",
+      "cancel": "Abbrechen",
+      "submit": "Senden"
+    },
+    "pagination": "Zeige {{start}} bis {{end}} von {{total}} Einträgen"
+  },
+  "faqPage": {
+    "title": "LunaFounder & LunaLotto",
+    "tabs": {
+      "lunafounder": "LunaFounder",
+      "lunalotto": "LunaLotto"
+    },
+    "sections": {
+      "lunafounder": {
+        "header": "LunaFounder - Häufig gestellte Fragen",
+        "items": [
+          {
+            "question": "Was ist ein LunaFounder NFT?",
+            "answer": "Ein LunaFounder NFT ist ein limitierter digitaler Vermögenswert auf der Solana-Blockchain. Er ermöglicht dir eine Beteiligung an LunaCasino und Zugang zu exklusiven Funktionen wie monatliche Lotterie-Tickets und Streamline-Boni."
+          },
+          {
+            "question": "Wie funktioniert die monatliche Gewinnbeteiligung?",
+            "answer": "15 % des Netto-Gewinns von LunaCasino werden monatlich an alle LunaFounder-NFT-Holder ausgeschüttet - anteilig nach NFT-Wert."
+          },
+          {
+            "question": "Was ist die Streamline und wie profitiere ich davon?",
+            "answer": "Die Streamline ist ein globales Ranglistensystem für LunaFounder-Holder. Ab einem NFT-Wert von 500 $ nimmst du automatisch teil und kannst dir zusätzliche Bonus-Ausschüttungen basierend auf deiner Platzierung sichern."
+          },
+          {
+            "question": "Wie bekomme ich meine monatlichen LunaLotto-Tickets?",
+            "answer": "Als NFT-Holder kannst du jeden Monat kostenlose Tickets selbst minten. Du zahlst nur die Transaktionsgebühr auf der Solana-Blockchain."
+          },
+          {
+            "question": "Wann kann ich mein NFT handeln?",
+            "answer": "Nach Abschluss des NFT-Verkaufs sind die LunaFounder NFTs frei handelbar auf allen gängigen Solana-NFT-Marktplätzen."
+          },
+          {
+            "question": "Wie viele LunaFounder NFTs gibt es?",
+            "answer": "Es gibt insgesamt 18.130 NFTs, aufgeteilt in sieben Kategorien - von 100 $ bis 50.000 $. Je höher der NFT-Wert, desto größer deine Beteiligung."
+          },
+          {
+            "question": "Welche Wallet wird benötigt?",
+            "answer": "Zur Nutzung benötigst du eine Solana-kompatible Wallet wie Phantom, Solflare oder Backpack."
+          }
+        ]
+      },
+      "lunalotto": {
+        "header": "LunaLotto - Häufig gestellte Fragen",
+        "items": [
+          {
+            "question": "Was ist LunaLotto?",
+            "answer": "LunaLotto ist eine transparente Online-Lotterie auf der Solana-Blockchain. Alle Ziehungen erfolgen automatisiert per Smart Contract - nachvollziehbar, sicher und fair."
+          },
+          {
+            "question": "Wie viel kostet ein Ticket?",
+            "answer": "Ein Ticket kostet 5 $ in Kryptowährung. Es wird keine Gebühr erhoben - der volle Betrag geht in den Jackpot und die Gewinnerverteilung."
+          },
+          {
+            "question": "Wie funktionieren die Ziehungen?",
+            "answer": "Ziehungen finden regelmäßig statt. Die Gewinner werden zufällig durch einen Blockchain-basierten Zufallsmechanismus bestimmt und auf der Plattform veröffentlicht."
+          },
+          {
+            "question": "Wie erhalte ich meinen Gewinn?",
+            "answer": "Gewinne werden automatisch an die Wallet-Adresse ausgezahlt, mit der das Gewinner-Ticket gekauft wurde."
+          },
+          {
+            "question": "Welche Blockchain wird verwendet?",
+            "answer": "LunaLotto läuft ausschließlich auf der Solana-Blockchain, um schnelle Transaktionen und minimale Gebühren zu ermöglichen."
+          },
+          {
+            "question": "Wie funktioniert das Affiliate-Programm?",
+            "answer": "Das LunaLotto-Affiliate-System schüttet 30 % Provision auf Ticketkäufe aus - verteilt über 10 Ebenen. Beispiel: In der 1. Ebene erhältst du 12 %, danach gestaffelt bis zur 10. Ebene."
+          },
+          {
+            "question": "Kann ich kostenlos teilnehmen?",
+            "answer": "Ja. Inhaber von LunaFounder NFTs erhalten jeden Monat kostenlose Tickets. Zusätzlich gibt es regelmäßig Community-Aktionen und Gewinnspiele."
+          }
+        ]
+      }
+    }
+  },
+  "loginPage": {
+    "title": "Melden Sie sich an",
+    "subtitle": "Bitte geben Sie Ihre Daten ein, um sich anzumelden",
+    "emailPlaceholder": "E-Mail oder Benutzername",
+    "passwordPlaceholder": "Passwort",
+    "signIn": "Anmelden",
+    "signingIn": "Anmeldung läuft...",
+    "oldUser": "Sind Sie bereits registriert?",
+    "forgotPassword": "Passwort vergessen?",
+    "dontHaveAccount": "Noch keinen Account?",
+    "signUp": "Registrieren",
+    "errorEmailRequired": "E-Mail ist erforderlich",
+    "errorPasswordRequired": "Passwort ist erforderlich",
+    "authFailed": "Authentifizierung fehlgeschlagen. Bitte erneut versuchen oder E-Mail verwenden.",
+    "verificationFailed": "Verifikation fehlgeschlagen. Bitte erneut versuchen oder E-Mail verwenden."
+  },
+  "registrationPage": {
+    "createAccountTitle": "Konto erstellen",
+    "createAccountSubtitle": "Bitte füllen Sie Ihre Daten aus, um ein Konto zu erstellen",
+    "placeholderUsername": "Benutzername",
+    "placeholderEmail": "E-Mail",
+    "placeholderPassword": "Passwort",
+    "referralWithCode": "Empfehlung : {{referral}}",
+    "checkboxTerms": "Ich stimme den Allgemeinen Geschäftsbedingungen zu",
+    "signUpButton": "Registrieren",
+    "orSignUpWith": "Oder registrieren mit",
+    "haveAccount": "Haben Sie bereits ein Konto?",
+    "signIn": "Anmelden",
+    "validationUsernameRequired": "Benutzername ist erforderlich",
+    "validationEmailRequired": "E-Mail ist erforderlich",
+    "validationEmailInvalid": "E-Mail ist ungültig",
+    "validationPasswordRequired": "Passwort ist erforderlich",
+    "validationPasswordMin": "Passwort muss mindestens {{count}} Zeichen lang sein",
+    "validationTermsRequired": "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen"
+  },
+  "loginExistingPage": {
+    "titleWallet": "Verbinden Sie Ihre Wallet",
+    "subtitleWallet": "Bitte verbinden Sie Ihre Wallet, um fortzufahren",
+    "placeholderWalletAddress": "Wallet-Adresse",
+    "changePasswordButton": "Passwort ändern",
+    "modalTitle": "Passwort erfolgreich geändert",
+    "modalOk": "OK",
+    "modalParagraph1": "Ihr Passwort wurde erfolgreich geändert.",
+    "modalParagraph2": "Benutzername: {{username}}",
+    "modalParagraph3": "Bitte verwenden Sie Ihren Benutzernamen und das neue Passwort zur Anmeldung.",
+    "errorConnectWallet": "Bitte verbinden Sie Ihre Wallet, um fortzufahren",
+    "errorPasswordMin": "Passwort muss mindestens {{count}} Zeichen lang sein",
+    "errorPasswordsMismatch": "Passwörter stimmen nicht überein",
+    "placeholderNewPassword": "Neues Passwort",
+    "placeholderConfirmPassword": "Neues Passwort bestätigen"
+  },
+  "forgotPasswordPage": {
+    "title": "Verbinden Sie Ihre Wallet",
+    "subtitle": "Bitte verbinden Sie Ihre Wallet, um fortzufahren",
+    "placeholderWalletAddress": "Wallet-Adresse",
+    "sendResetLink": "Link zum Zurücksetzen senden",
+    "errorConnectWallet": "Bitte verbinden Sie Ihre Wallet, um fortzufahren",
+    "modalTitle": "Link zum Zurücksetzen gesendet",
+    "modalMessage": "Ein Link zum Zurücksetzen Ihres Passworts wurde an Ihre Wallet-Adresse gesendet. Bitte prüfen Sie Ihre Wallet, um mit dem Zurücksetzen fortzufahren.",
+    "modalOk": "OK"
+  },
+  "purchasedTickets": {
+    "title": "Gekaufte Tickets",
+    "subtitle": "Hier sind Ihre gekauften Tickets",
+    "Username": "Benutzername",
+    "Date": "Datum",
+    "Ticket": "Ticket",
+    "noTickets": "Keine Tickets gefunden",
+    "Prefix": "Ticket",
+    "Type": "Typ",
+    "Status": "Status",
+    "Price": "Preis",
+    "Amount": "Anzahl",
+    "Wallet": "Wallet",
+    "Mints": "Mints"
+  },
+  "oldNfts": {
+    "title": "Alte NFTs",
+    "noNFtsFound": "Keine NFTs gefunden"
+  },
+  "newNfts": {
+    "title": "Benutzer NFTs"
+  },
+  "agb": {
+    "title": "Allgemeine Geschäftsbedingungen (AGB)",
+    "subtitle": "für die Nutzung von LunaLotto und LunaFounder",
+    "sections": {
+      "1": {
+        "title": "1. Allgemeine Informationen",
+        "content": "LunaLotto und LunaFounder (nachfolgend gemeinsam \"Plattform\") werden betrieben von der LunaCasino Ltd., einer eingetragenen Gesellschaft mit Sitz in Barbados (Firmenregistrierung: COMPANY NO. 53670). Die Plattform bietet digitale Lotteriedienstleistungen sowie den Verkauf blockchainbasierter NFTs an, die mit passiven Erträgen aus dem LunaCasino verknüpft sind. Die Dienstleistungen unterliegen einer lizenzierten Regulierung gemäß den Glücksspielbestimmungen von Curaçao."
+      },
+      "2": {
+        "title": "2. Geltungsbereich und Akzeptanz",
+        "content": "Diese Allgemeinen Geschäftsbedingungen regeln die Nutzung aller angebotenen Funktionen auf der Plattform, einschließlich des Erwerbs von NFTs, der Teilnahme an Lotterien und der Nutzung des Affiliate-Programms.\n\nMit der Registrierung und Nutzung der Plattform erklären Sie sich mit diesen Bedingungen ausdrücklich einverstanden."
+      },
+      "3": {
+        "title": "3. Teilnahmebedingungen",
+        "content": [
+          "Die Nutzung der Plattform ist ausschließlich volljährigen Personen erlaubt (mind. 18 Jahre oder das gesetzlich geforderte Mindestalter im jeweiligen Wohnsitzland).",
+          "Nutzer sind verpflichtet, bei der Registrierung vollständige und wahrheitsgemäße Angaben zu ihrer Identität zu machen.",
+          "Es liegt in der alleinigen Verantwortung des Nutzers, die jeweiligen gesetzlichen Bestimmungen im eigenen Land zu prüfen und sicherzustellen, dass die Nutzung von Online-Glücksspielen, Lotterien und blockchainbasierten Finanzprodukten wie NFTs zulässig ist.",
+          "Der Betreiber übernimmt keine Haftung für Verstöße gegen lokale Gesetze durch einzelne Nutzer. Der Zugang zur Plattform kann technisch eingeschränkt werden, jedoch garantiert der Betreiber keine vollständige Geoblockierung."
+        ]
+      },
+      "4": {
+        "title": "4. NFT-Käufe (LunaFounder)",
+        "content": [
+          "Über die Plattform können Nutzer limitierte LunaFounder NFTs auf der Solana-Blockchain erwerben. Diese NFTs gewähren dem Inhaber bestimmte digitale Nutzungsrechte, darunter monatliche Belohnungen in Form von Profitbeteiligungen am LunaCasino sowie den Zugang zu kostenlosen Lotterie-Tickets.",
+          "Der Kauf eines NFTs stellt keinen Erwerb von Anteilen am Unternehmen oder Anspruch auf garantierte Erträge dar.",
+          "Die NFTs sind frei übertragbar und können nach Abschluss des offiziellen Verkaufs auf externen NFT-Marktplätzen gehandelt werden. Der Betreiber haftet nicht für Preisschwankungen, Marktverluste oder etwaige Probleme beim Wiederverkauf.",
+          "Der Nutzer ist selbst für die sichere Verwahrung seines NFTs und der dazugehörigen Wallet-Zugangsdaten verantwortlich. Bei Verlust des Wallet-Zugangs besteht kein Anspruch auf Ersatz."
+        ]
+      },
+      "5": {
+        "title": "5. Lotterie-Regeln (LunaLotto)",
+        "content": [
+          "LunaLotto ist eine blockchainbasierte Online-Lotterie, die ausschließlich auf der Solana-Blockchain betrieben wird. Die Ziehungen erfolgen automatisiert durch einen transparenten, manipulationssicheren Smart Contract.",
+          "Der Preis für ein Lotterie-Ticket beträgt 5 $. Der gesamte Betrag fließt in den Jackpot und die Gewinnerverteilung - es wird keine zusätzliche Gebühr erhoben.",
+          "Die Gewinner werden automatisch durch ein Zufallsverfahren ermittelt. Die Ergebnisse sind auf der Blockchain öffentlich einsehbar.",
+          "Gewinne werden automatisch an die Wallet-Adresse des Gewinner-Tickets ausgeschüttet.",
+          "Ein Rücktritt vom Ticketkauf oder eine Rückerstattung nach Teilnahme ist ausgeschlossen.",
+          "Der Betreiber behält sich vor, Lotterie-Ziehungen bei technischen Störungen, Manipulationsversuchen oder aus regulatorischen Gründen zu verschieben oder auszusetzen."
+        ]
+      },
+      "6": {
+        "title": "6. Affiliate-Programm",
+        "content": [
+          "Die Plattform bietet ein mehrstufiges Affiliate-System, bei dem Nutzer durch die Empfehlung neuer Teilnehmer Provisionen verdienen können.",
+          "Für LunaLotto werden bis zu 30 % der Ticketkäufe über 10 Ebenen ausgeschüttet. Die exakte Verteilung ist auf der Website einsehbar.",
+          "Für LunaFounder-NFT-Verkäufe gelten eigene Provisionsmodelle. Diese werden separat auf der Verkaufsplattform dargestellt.",
+          "Die Auszahlung von Affiliate-Einnahmen erfolgt automatisiert über Smart Contracts oder kann vom Nutzer aktiv abgerufen werden.",
+          "Der Missbrauch des Systems durch Mehrfachkonten, Spam oder betrügerische Aktivitäten führt zum sofortigen Ausschluss und Verlust sämtlicher Provisionsansprüche."
+        ]
+      },
+      "7": {
+        "title": "7. Gewinnverteilung und Auszahlung",
+        "content": [
+          "Alle Erträge aus dem LunaCasino, die im Rahmen des LunaFounder-Modells ausgeschüttet werden, basieren auf den realen Netto-Gewinnen der Plattform. Es besteht kein Anspruch auf garantierte, fixe Ausschüttungen.",
+          "Ausschüttungen erfolgen regelmäßig (in der Regel monatlich) und werden anteilig gemäß dem NFT-Wert automatisiert oder durch Abruf durch den Nutzer ausgezahlt.",
+          "Für technische Verzögerungen oder Übertragungsprobleme auf der Solana-Blockchain kann der Betreiber nicht haftbar gemacht werden.",
+          "Gewinne aus der LunaLotto werden automatisch nach Ziehung auf die Wallet des Gewinner-Tickets übertragen. Eine manuelle Auszahlung ist nicht erforderlich."
+        ]
+      },
+      "8": {
+        "title": "8. Rechte und Pflichten der Nutzer",
+        "content": [
+          "Nutzer verpflichten sich zu einem respektvollen Umgang mit anderen Mitgliedern, Partnern, Mitarbeitern sowie dem Unternehmen selbst - sowohl auf der Plattform als auch in öffentlich zugänglichen Kanälen und sozialen Medien.",
+          "Der Betreiber behält sich das Recht vor, Nutzer oder Vertriebspartner bei nachgewiesenem Fehlverhalten, Beleidigungen, Verleumdungen oder öffentlicher Rufschädigung gegenüber der Plattform, dem Team oder anderen Nutzern ohne Vorwarnung von der Nutzung auszuschließen.",
+          "Ein solcher Ausschluss kann den Entzug von Affiliate-Rechten, Teilnahmevorteilen sowie den Ausschluss vom NFT-Reward-System zur Folge haben.",
+          "Der Nutzer ist verpflichtet, geltendes Recht einzuhalten und keine Inhalte zu veröffentlichen oder Handlungen vorzunehmen, die gegen Gesetze, Rechte Dritter oder diese AGB verstoßen."
+        ]
+      },
+      "9": {
+        "title": "9. Haftungsausschluss",
+        "content": [
+          "Die Plattform übernimmt keine Haftung für Verluste, die durch die Volatilität von Kryptowährungen, technische Fehler, Dritte oder externe Marktplätze entstehen.",
+          "Es besteht kein Anspruch auf Verfügbarkeit der Plattform zu jeder Zeit. Wartungen, Upgrades oder externe Faktoren können den Betrieb zeitweise beeinträchtigen.",
+          "Die Teilnahme an LunaLotto und der Erwerb von NFTs erfolgen auf eigenes Risiko. Es handelt sich nicht um eine Investitionsberatung oder ein Anlageprodukt im klassischen Sinne.",
+          "Nutzer tragen die alleinige Verantwortung für ihre Wallets, privaten Schlüssel und die Sicherung ihrer Zugangsdaten."
+        ]
+      },
+      "10": {
+        "title": "10. Datenschutz und Sicherheit",
+        "content": [
+          "Der Schutz der persönlichen Daten und der Privatsphäre der Nutzer hat für die Plattform höchste Priorität.",
+          "Es werden nur Daten erhoben, die zur Erbringung der Dienste technisch oder gesetzlich erforderlich sind (z. B. Wallet-Adresse, Empfehlungsstruktur).",
+          "Alle Daten werden gemäß den geltenden Datenschutzvorgaben gespeichert und verarbeitet. Personenbezogene Daten werden nicht an Dritte weitergegeben, es sei denn, dies ist gesetzlich vorgeschrieben oder zur Erfüllung der Dienstleistung notwendig.",
+          "Die Kommunikation mit der Plattform sowie sämtliche Transaktionen erfolgen über verschlüsselte Verbindungen. Dennoch liegt die Verantwortung für die Sicherheit der verwendeten Wallets, Zugangsdaten und Endgeräte beim Nutzer."
+        ]
+      },
+      "11": {
+        "title": "11. Rechtswahl und Gerichtsstand",
+        "content": [
+          "Diese AGB unterliegen dem Recht von Barbados, sofern keine zwingenden gesetzlichen Vorschriften im Wohnsitzstaat des Nutzers entgegenstehen.",
+          "Für alle Streitigkeiten, die aus oder im Zusammenhang mit der Nutzung der Plattform entstehen, ist - sofern gesetzlich zulässig - der Gerichtsstand in Barbados maßgeblich.",
+          "Nutzer sind verpflichtet, sich eigenständig über die Rechtslage in ihrem Land zu informieren und sicherzustellen, dass die Nutzung der angebotenen Dienste rechtlich zulässig ist."
+        ]
+      }
+    },
+    "contact": {
+      "title": "12. Kontakt",
+      "content": [
+        "Bei Fragen zu den AGB, technischen Problemen oder rechtlichen Anliegen können Sie uns jederzeit kontaktieren:",
+        "LunaCasino Ltd.",
+        "Registrierungsnummer: COMPANY NO. 53670",
+        "Firmensitz: Barbados",
+        "E-Mail: support@lunalotto.io",
+        "Website: www.lunalotto.io",
+        "Telegram (Community): @llottocasino"
+      ]
+    }
+  },
+  "earnedGifts": {
+    "title": "Verdiente Geschenke"
+  },
+  "userList": {
+    "title": "Benutzerliste"
   }
 }

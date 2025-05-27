@@ -1,4 +1,5 @@
 "use client";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../../images/logo_luna.png";
 
@@ -14,8 +15,18 @@ export function NavMenuToggle() {
 }
 
 const NavHader = ({ menuToggle, setMenuToggle }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="nav-header">
+    <div
+      className="nav-header"
+      style={{ backgroundColor: isMobile ? "#24292d" : "#2f363e" }}
+    >
       <Link to="/dashboard" className="brand-logo">
         <img className="logo-abbr" src={logo || "/placeholder.svg"} alt="" />
       </Link>
